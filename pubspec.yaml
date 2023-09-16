@@ -14,9 +14,10 @@ dependencies:
     sdk: flutter
   go_router: ^10.1.2
   intl: any
+  package_info_plus: ^4.1.0
   permission_handler: ^10.4.3
   provider: ^6.0.5
-  shared_preferences: ^2.2.1
+  url_launcher: ^6.1.14
 
 dev_dependencies:
   flutter_test:
@@ -26,3 +27,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  fonts:
+   - family: my_icons
+     fonts:
+      - asset: lib/assets/icons/my_icons.ttf
