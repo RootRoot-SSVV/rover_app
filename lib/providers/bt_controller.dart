@@ -6,8 +6,34 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 import 'dart:developer' as dev;
 
+// Communication rules:
+//
+// Sending:
+// data_buffer = [mode][movement][additional data][additional data]...
+//
+// modes:
+//     0-15    =   module selection
+//     16      =   no special action
+//     17      =   rescan for modules
+//     18      =   disconnect
+//
+
+enum Mode {
+  nil(16),
+  rescan(17),
+  disconnect(18);
+
+  const Mode(this.value);
+  final int value;
+}
+
 class BtController extends ChangeNotifier {
   BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
+
+  Uint8List messageBuffer = Uint8List(64);
+  int motorControl = 0;
+  List<int> dataForModule = List.filled(64, 0);
+  List<int> connectedModules = [];
 
   StreamSubscription<BluetoothDiscoveryResult>? _streamSubscription;
   List<BluetoothDiscoveryResult> results =
@@ -25,7 +51,7 @@ class BtController extends ChangeNotifier {
 
   BluetoothConnection? connection;
 
-  // TODO: 
+  // TODO:
   // Later see if this is necessary, idk if we need to get device adress and name,
   // I think that we only need from line 32 to 44
   BtController() {
@@ -95,14 +121,30 @@ class BtController extends ChangeNotifier {
       dev.log('Connected');
 
       connection?.input?.listen((Uint8List data) {
-        dev.log('BT >>> $data');
+        messageBuffer.setRange(0, data.length, data);
       }).onDone(() => dev.log('Disconnected'));
     } catch (e) {
       dev.log('Cannot connect');
     }
   }
 
-  void sendMessage() {
-    // TODO: sendMessage()
+  void sendMessage(Mode mode) async {
+    Uint8List message =
+        Uint8List.fromList([mode.value, motorControl] + dataForModule);
+
+    try {
+      connection!.output.add(message);
+      await connection!.output.allSent;
+    } catch (e) {}
+  }
+
+  void scanForModules() {
+    // Testing other
+    //sendMessage(Mode.rescan);
+    //connectedModules.addAll(messageBuffer);
+
+    connectedModules = [0, 1];
+
+    notifyListeners();
   }
 }

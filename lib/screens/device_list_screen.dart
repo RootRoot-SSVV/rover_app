@@ -3,7 +3,7 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rover_app/assets/icons/my_icons.dart';
-import 'package:rover_app/bluetooth/bt_controller.dart';
+import 'package:rover_app/providers/bt_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rover_app/l10n/l10n.dart';
 import 'package:rover_app/l10n/locale_provider.dart';

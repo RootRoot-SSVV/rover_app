@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rover_app/panel_screens/panel.dart';
 import 'package:rover_app/widgets/control_button.dart';
 
 class RoverControlScreen extends StatelessWidget {
@@ -24,7 +25,7 @@ class RoverControlScreen extends StatelessWidget {
                     ],
                   ),
                 )),
-            const Expanded(flex: 6, child: Placeholder()),
+            const Expanded(flex: 6, child: Panel()),
             Expanded(
                 flex: 2,
                 child: Center(

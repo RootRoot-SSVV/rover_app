@@ -4,9 +4,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:rover_app/bluetooth/bt_controller.dart';
+import 'package:rover_app/providers/bt_controller.dart';
 import 'package:rover_app/l10n/l10n.dart';
 import 'package:rover_app/l10n/locale_provider.dart';
+import 'package:rover_app/providers/panels.dart';
 import 'package:rover_app/screens/device_list_screen.dart';
 import 'package:rover_app/screens/privacy_policy_screen.dart';
 import 'package:rover_app/screens/rover_control_screen.dart';
@@ -26,17 +27,20 @@ void main() {
       Permission.bluetoothScan
     ].request().then((status) {
       runApp(MultiProvider(
-          providers: [ChangeNotifierProvider(create: (_) => BtController())],
+          providers: [
+            ChangeNotifierProvider(create: (_) => BtController()),
+            ChangeNotifierProvider(create: (_) => Panels())
+          ],
           child: MainApp()));
     });
   });
 }
 
 final GoRouter _router = GoRouter(routes: <RouteBase>[
-  GoRoute(path: '/', builder: (context, state) => DeviceListScreen()),
+  GoRoute(path: '/', builder: (context, state) => RoverControlScreen()),
   GoRoute(
     path: '/controlScreen',
-    builder: (context, state) => RoverControlScreen(),
+    builder: (context, state) => DeviceListScreen(),
   ),
   GoRoute(path: '/privacyPolicy', builder: (context, state) => const PrivacyPolicyScreen())
 ]);
