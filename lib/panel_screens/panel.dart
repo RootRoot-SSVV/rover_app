@@ -3,21 +3,23 @@ import 'package:provider/provider.dart';
 import 'package:rover_app/providers/panels.dart';
 
 class Panel extends StatelessWidget {
+  final IconData menuIcon = Icons.keyboard_arrow_up_rounded;
+
   const Panel({super.key});
 
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<Panels>(context);
-    int currentIndex = _provider.currentPageIndex;
 
-    return Scaffold(
-        bottomNavigationBar: NavigationBar(
-          destinations: _provider.navigationDestinations,
-          onDestinationSelected: (int index) {
-            _provider.destinationSelected(index);
-          },
-          selectedIndex: currentIndex,
-        ),
-        body: Provider.of<Panels>(context, listen: false).getCurrentPanel());
+    return DefaultTabController(
+        length: _provider.listOfPanels.length,
+        child: Scaffold(
+          bottomNavigationBar: TabBar(
+              tabs: _provider.listOfTabButtons,
+              isScrollable: true,
+              physics: BouncingScrollPhysics(),
+              labelColor: Colors.blueGrey),
+          body: TabBarView(children: _provider.listOfPanels),
+        ));
   }
 }

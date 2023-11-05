@@ -144,7 +144,5 @@ class BtController extends ChangeNotifier {
     //connectedModules.addAll(messageBuffer);
 
     connectedModules = [0, 1];
-
-    notifyListeners();
   }
 }

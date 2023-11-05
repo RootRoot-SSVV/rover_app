@@ -8,40 +8,38 @@ class RoverControlScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MaterialApp(
-        home: Row(
-          children: [
-            Expanded(
-                flex: 2,
-                child: Center(
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    crossAxisCount: 1,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    children: const [
-                      ControlButton(icon: Icons.arrow_upward, value: 1),
-                      ControlButton(icon: Icons.arrow_downward, value: 2)
-                    ],
-                  ),
-                )),
-            const Expanded(flex: 6, child: Panel()),
-            Expanded(
-                flex: 2,
-                child: Center(
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    crossAxisCount: 1,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    children: const [
-                      ControlButton(icon: Icons.arrow_back, value: 4),
-                      ControlButton(icon: Icons.arrow_forward, value: 8)
-                    ],
-                  ),
-                )),
-          ],
-        ),
+      body: Row(
+        children: [
+          Expanded(
+              flex: 2,
+              child: Center(
+                child: GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: 1,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  children: const [
+                    ControlButton(icon: Icons.arrow_upward, value: 1),
+                    ControlButton(icon: Icons.arrow_downward, value: 2)
+                  ],
+                ),
+              )),
+          const Expanded(flex: 6, child: Panel()),
+          Expanded(
+              flex: 2,
+              child: Center(
+                child: GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: 1,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  children: const [
+                    ControlButton(icon: Icons.arrow_back, value: 4),
+                    ControlButton(icon: Icons.arrow_forward, value: 8)
+                  ],
+                ),
+              )),
+        ],
       ),
     );
   }

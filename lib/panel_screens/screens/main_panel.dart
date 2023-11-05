@@ -23,7 +23,7 @@ class MainPanel extends StatelessWidget {
                     .scanForModules();
                 Provider.of<Panels>(context, listen: false).updateLists(context);
               },
-              icon: Icon(Icons.replay),
+              icon: const Icon(Icons.replay),
               label: Text('Rescan')),
         ],
       ),

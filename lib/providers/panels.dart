@@ -4,6 +4,7 @@ import 'package:rover_app/panel_screens/screens/main_panel.dart';
 import 'package:rover_app/panel_screens/screens/temperature_module.dart';
 import 'package:rover_app/panel_screens/screens/ultrasonic_module.dart';
 import 'package:rover_app/providers/bt_controller.dart';
+import 'package:rover_app/widgets/tab_buttons.dart';
 
 class Panels extends ChangeNotifier {
   final Map<int, StatelessWidget> moduleById = {
@@ -14,33 +15,25 @@ class Panels extends ChangeNotifier {
 
   int currentPageIndex = 0;
 
-  List<NavigationDestination> navigationDestinations = [
-    NavigationDestination(icon: Icon(Icons.cancel), label: 'Home'),
-    NavigationDestination(icon: Icon(Icons.cancel), label: 'No module')
-  ];
+  List<Widget> listOfPanels = [MainPanel()];
 
-  List<Widget> listOfPanels = [MainPanel(), Placeholder()];
+  List<TabButton> listOfTabButtons = [
+    TabButton(name: 'Home', tabIcon: Icons.home)
+  ];
 
   void updateLists(BuildContext context) {
     final _btController = Provider.of<BtController>(context, listen: false);
 
     listOfPanels.clear();
-    navigationDestinations.clear();
+    listOfTabButtons.clear();
 
     listOfPanels.add(moduleById[16]!);
-    navigationDestinations
-        .add(NavigationDestination(icon: Icon(Icons.home), label: 'Home'));
+    listOfTabButtons
+        .add(const TabButton(name: 'Home', tabIcon: Icons.home));
 
     for (int i = 0; i < _btController.connectedModules.length; i++) {
       listOfPanels.add(moduleById[_btController.connectedModules[i]]!);
-      navigationDestinations.add(
-          NavigationDestination(icon: Icon(Icons.clear), label: i.toString()));
-    }
-
-    if (navigationDestinations.length < 2) {
-      listOfPanels.add(moduleById[16]!);
-      navigationDestinations.add(
-          NavigationDestination(icon: Icon(Icons.clear), label: 'No module'));
+      listOfTabButtons.add(TabButton(name: i.toString(), tabIcon: Icons.clear));
     }
     notifyListeners();
   }

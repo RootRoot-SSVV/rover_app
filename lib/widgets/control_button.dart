@@ -21,7 +21,7 @@ class _ControlButtonState extends State<ControlButton> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: BorderRadius.circular(35.0),
           child: Material(
             color: pressedDown ? Colors.blueGrey : Colors.blue,
             child: InkWell(child: Icon(widget.icon)),

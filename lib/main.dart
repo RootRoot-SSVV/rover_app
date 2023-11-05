@@ -26,23 +26,23 @@ void main() {
       Permission.bluetoothConnect,
       Permission.bluetoothScan
     ].request().then((status) {
-      runApp(MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => BtController()),
-            ChangeNotifierProvider(create: (_) => Panels())
-          ],
-          child: MainApp()));
+      runApp(MultiProvider(providers: [
+        ChangeNotifierProvider(create: (_) => BtController()),
+        ChangeNotifierProvider(create: (_) => Panels())
+      ], child: MainApp()));
     });
   });
 }
 
 final GoRouter _router = GoRouter(routes: <RouteBase>[
-  GoRoute(path: '/', builder: (context, state) => RoverControlScreen()),
+  GoRoute(path: '/', builder: (context, state) => DeviceListScreen()),
   GoRoute(
     path: '/controlScreen',
-    builder: (context, state) => DeviceListScreen(),
+    builder: (context, state) => RoverControlScreen(),
   ),
-  GoRoute(path: '/privacyPolicy', builder: (context, state) => const PrivacyPolicyScreen())
+  GoRoute(
+      path: '/privacyPolicy',
+      builder: (context, state) => const PrivacyPolicyScreen())
 ]);
 
 class MainApp extends StatelessWidget {
@@ -54,6 +54,8 @@ class MainApp extends StatelessWidget {
         providers: [ChangeNotifierProvider(create: (_) => LocaleProvider())],
         child: Consumer<LocaleProvider>(builder: (context, provider, snapshot) {
           return MaterialApp.router(
+              theme: ThemeData(
+                  useMaterial3: true),
               localizationsDelegates: const [
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
