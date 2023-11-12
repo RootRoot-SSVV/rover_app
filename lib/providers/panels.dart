@@ -4,7 +4,6 @@ import 'package:rover_app/panel_screens/screens/main_panel.dart';
 import 'package:rover_app/panel_screens/screens/temperature_module.dart';
 import 'package:rover_app/panel_screens/screens/ultrasonic_module.dart';
 import 'package:rover_app/providers/bt_controller.dart';
-import 'package:rover_app/widgets/tab_buttons.dart';
 
 class Panels extends ChangeNotifier {
   final Map<int, StatelessWidget> moduleById = {
@@ -17,9 +16,7 @@ class Panels extends ChangeNotifier {
 
   List<Widget> listOfPanels = [MainPanel()];
 
-  List<TabButton> listOfTabButtons = [
-    TabButton(name: 'Home', tabIcon: Icons.home)
-  ];
+  List<Tab> listOfTabButtons = [Tab(text: 'Home', icon: Icon(Icons.home))];
 
   void updateLists(BuildContext context) {
     final _btController = Provider.of<BtController>(context, listen: false);
@@ -28,12 +25,11 @@ class Panels extends ChangeNotifier {
     listOfTabButtons.clear();
 
     listOfPanels.add(moduleById[16]!);
-    listOfTabButtons
-        .add(const TabButton(name: 'Home', tabIcon: Icons.home));
+    listOfTabButtons.add(const Tab(text: 'Home', icon: Icon(Icons.home)));
 
     for (int i = 0; i < _btController.connectedModules.length; i++) {
       listOfPanels.add(moduleById[_btController.connectedModules[i]]!);
-      listOfTabButtons.add(TabButton(name: i.toString(), tabIcon: Icons.clear));
+      listOfTabButtons.add(Tab(text: i.toString(), icon: Icon(Icons.clear)));
     }
     notifyListeners();
   }

@@ -16,7 +16,7 @@ class Panel extends StatelessWidget {
         child: Scaffold(
           bottomNavigationBar: TabBar(
               tabs: _provider.listOfTabButtons,
-              isScrollable: true,
+              isScrollable: (_provider.listOfPanels.length > 7),
               physics: BouncingScrollPhysics(),
               labelColor: Colors.blueGrey),
           body: TabBarView(children: _provider.listOfPanels),

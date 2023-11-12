@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'dart:developer' as dev;
+
+import 'package:rover_app/providers/bt_controller.dart';
 
 class ControlButton extends StatefulWidget {
   final IconData icon;
@@ -23,20 +26,20 @@ class _ControlButtonState extends State<ControlButton> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(35.0),
           child: Material(
-            color: pressedDown ? Colors.blueGrey : Colors.blue,
-            child: InkWell(child: Icon(widget.icon)),
+            color: pressedDown ? const Color(0xFF001c3a) : const Color(0xFF1e5fa6),
+            child: InkWell(child: Icon(widget.icon, color: const Color(0xFFd2e4ff))),
           ),
         ),
       ),
       onTapDown: (details) {
-        // TODO: Add function to send message here
+        Provider.of<BtController>(context, listen: false).motorControl |= widget.value;
         setState(() => pressedDown = true);
-        dev.log('1');
+        dev.log('${widget.value}');
       },
       onTapUp: (details) {
-        // TODO: Add function to send message here
+        Provider.of<BtController>(context, listen: false).motorControl &= ~widget.value;
         setState(() => pressedDown = false);
-        dev.log('0');
+        dev.log('release ${widget.value}');
       },
       onTapCancel: () {
         setState(() => pressedDown = false);

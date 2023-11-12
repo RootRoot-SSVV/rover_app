@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
-import 'dart:developer' as dev;
+import 'dart:developer' as Dev;
 
 // Communication rules:
 //
@@ -19,6 +19,8 @@ import 'dart:developer' as dev;
 //
 
 enum Mode {
+  temperature(0),
+  ultrasonic(1),
   nil(16),
   rescan(17),
   disconnect(18);
@@ -29,6 +31,7 @@ enum Mode {
 
 class BtController extends ChangeNotifier {
   BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
+  bool bluetoothIsOn = true;
 
   Uint8List messageBuffer = Uint8List(64);
   int motorControl = 0;
@@ -52,11 +55,14 @@ class BtController extends ChangeNotifier {
   BluetoothConnection? connection;
 
   // TODO:
-  // Later see if this is necessary, idk if we need to get device adress and name,
-  // I think that we only need from line 32 to 44
+  // Later see if this is necessary, idk if we need to get device adress and name
   BtController() {
+    Dev.log('$_bluetoothState');
     FlutterBluetoothSerial.instance.state
         .then((state) => _bluetoothState = state);
+
+    Dev.log('$_bluetoothState');
+    notifyListeners();
 
     Future.doWhile(() async {
       if ((await FlutterBluetoothSerial.instance.isEnabled) ?? false) {
@@ -88,6 +94,13 @@ class BtController extends ChangeNotifier {
   }
 
   void startDiscovery() {
+    if (_bluetoothState == BluetoothState.ERROR ||
+        _bluetoothState == BluetoothState.STATE_OFF ||
+        _bluetoothState == BluetoothState.UNKNOWN) {
+      bluetoothIsOn = false;
+      return;
+    }
+
     _streamSubscription =
         FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
       final existingIndex = results
@@ -118,19 +131,22 @@ class BtController extends ChangeNotifier {
     try {
       connection = await BluetoothConnection.toAddress(address);
 
-      dev.log('Connected');
+      Dev.log('Connected');
 
       connection?.input?.listen((Uint8List data) {
-        messageBuffer.setRange(0, data.length, data);
-      }).onDone(() => dev.log('Disconnected'));
+        Dev.log('${data}');
+        // messageBuffer.;
+      }).onDone(() => Dev.log('Disconnected'));
     } catch (e) {
-      dev.log('Cannot connect');
+      Dev.log('Cannot connect');
     }
   }
 
   void sendMessage(Mode mode) async {
     Uint8List message =
         Uint8List.fromList([mode.value, motorControl] + dataForModule);
+
+    Dev.log('$message');
 
     try {
       connection!.output.add(message);
@@ -139,10 +155,22 @@ class BtController extends ChangeNotifier {
   }
 
   void scanForModules() {
-    // Testing other
-    //sendMessage(Mode.rescan);
-    //connectedModules.addAll(messageBuffer);
+    sendMessage(Mode.rescan);
+    connectedModules.clear();
 
-    connectedModules = [0, 1];
+    for (int i = 0; i < messageBuffer[1]; i++) {
+      Dev.log('Adding...............${messageBuffer[i + 2]}');
+      connectedModules.add(messageBuffer[i + 2]);
+    }
+
+    sendMessage(Mode.nil);
+
+    Dev.log('${connectedModules}');
+
+    notifyListeners();
+  }
+
+  void selectModule(Mode module) {
+    sendMessage(module);
   }
 }

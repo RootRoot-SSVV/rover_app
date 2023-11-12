@@ -13,11 +13,11 @@ class MainPanel extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ElevatedButton.icon(
+          OutlinedButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.bluetooth_disabled),
               label: Text('Disconnect')),
-          ElevatedButton.icon(
+          OutlinedButton.icon(
               onPressed: () {
                 Provider.of<BtController>(context, listen: false)
                     .scanForModules();

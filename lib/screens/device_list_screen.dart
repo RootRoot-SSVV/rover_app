@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +11,8 @@ import 'package:rover_app/l10n/l10n.dart';
 import 'package:rover_app/l10n/locale_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'dart:developer' as Dev;
 
 class DeviceListScreen extends StatelessWidget {
   const DeviceListScreen({super.key});
@@ -40,7 +44,6 @@ class DeviceListScreen extends StatelessWidget {
                               style: const TextStyle(color: Colors.white))))
                       .toList();
                 },
-                style: const TextStyle(color: Colors.black),
                 value: lang,
                 items: L10n.all
                     .map((e) => DropdownMenuItem(
@@ -106,6 +109,8 @@ class DeviceListScreen extends StatelessWidget {
               final address = result.device.address;
 
               return ListTile(
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15))),
                 leading: const Icon(Icons.bluetooth),
                 title:
                     Text(device.name ?? AppLocalizations.of(context)!.no_name),
@@ -131,6 +136,21 @@ class DeviceListScreen extends StatelessWidget {
                   onPressed: () {
                     Provider.of<BtController>(context, listen: false)
                         .restartDiscovery();
+                    if (!Provider.of<BtController>(context, listen: false)
+                        .bluetoothIsOn) {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                                title: const Text('No bluetooth or location'),
+                                content: const Text(
+                                    'Turn on bluetooth and location and restart app'),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () => exit(0),
+                                      child: Text('OK'))
+                                ],
+                              ));
+                    }
                   },
                   icon: const Icon(Icons.replay)),
         ),
