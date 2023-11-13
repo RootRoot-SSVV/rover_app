@@ -19,6 +19,8 @@ class Panels extends ChangeNotifier {
   List<Tab> listOfTabButtons = [Tab(text: 'Home', icon: Icon(Icons.home))];
 
   void updateLists(BuildContext context) {
+    // TODO: not finished
+
     final _btController = Provider.of<BtController>(context, listen: false);
 
     listOfPanels.clear();

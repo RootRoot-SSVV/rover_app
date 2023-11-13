@@ -9,17 +9,17 @@ class Panel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<Panels>(context);
+    final provider = Provider.of<Panels>(context);
 
     return DefaultTabController(
-        length: _provider.listOfPanels.length,
+        length: provider.listOfPanels.length,
         child: Scaffold(
           bottomNavigationBar: TabBar(
-              tabs: _provider.listOfTabButtons,
-              isScrollable: (_provider.listOfPanels.length > 7),
-              physics: BouncingScrollPhysics(),
+              tabs: provider.listOfTabButtons,
+              isScrollable: (provider.listOfPanels.length > 7),
+              physics: const BouncingScrollPhysics(),
               labelColor: Colors.blueGrey),
-          body: TabBarView(children: _provider.listOfPanels),
+          body: TabBarView(children: provider.listOfPanels),
         ));
   }
 }

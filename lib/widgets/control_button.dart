@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'dart:developer' as dev;
-
-import 'package:rover_app/providers/bt_controller.dart';
 
 class ControlButton extends StatefulWidget {
   final IconData icon;
@@ -32,14 +28,16 @@ class _ControlButtonState extends State<ControlButton> {
         ),
       ),
       onTapDown: (details) {
-        Provider.of<BtController>(context, listen: false).motorControl |= widget.value;
+        
+        // Add sending data
+        
         setState(() => pressedDown = true);
-        dev.log('${widget.value}');
       },
       onTapUp: (details) {
-        Provider.of<BtController>(context, listen: false).motorControl &= ~widget.value;
+        
+        // Add sending data
+
         setState(() => pressedDown = false);
-        dev.log('release ${widget.value}');
       },
       onTapCancel: () {
         setState(() => pressedDown = false);
@@ -48,7 +46,9 @@ class _ControlButtonState extends State<ControlButton> {
         setState(() => pressedDown = true);
       },
       onVerticalDragEnd: (details) {
-        // TODO: Add function to send message here
+
+        // Add sending data
+        
         setState(() => pressedDown = false);
       },
     );

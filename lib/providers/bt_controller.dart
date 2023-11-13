@@ -131,11 +131,10 @@ class BtController extends ChangeNotifier {
     try {
       connection = await BluetoothConnection.toAddress(address);
 
-      Dev.log('Connected');
-
       connection?.input?.listen((Uint8List data) {
-        Dev.log('-----${data}');
-        // messageBuffer.addAll(data);
+        
+        // Message receiving, probably
+
       }).onDone(() => Dev.log('Disconnected'));
     } catch (e) {
       Dev.log('Cannot connect');
@@ -155,22 +154,13 @@ class BtController extends ChangeNotifier {
   }
 
   void scanForModules() {
-    sendMessage(Mode.rescan);
-    connectedModules.clear();
-
-    for (int i = 0; i < messageBuffer[1]; i++) {
-      Dev.log('Adding...............${messageBuffer[i + 2]}');
-      connectedModules.add(messageBuffer[i + 2]);
-    }
-
-    sendMessage(Mode.nil);
-
-    Dev.log('${connectedModules}');
+    
+    // Sending messages and updating lists
 
     notifyListeners();
   }
 
   void selectModule(Mode module) {
-    sendMessage(module);
+    // Send message for new mode
   }
 }
