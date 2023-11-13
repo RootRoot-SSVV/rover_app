@@ -134,8 +134,8 @@ class BtController extends ChangeNotifier {
       Dev.log('Connected');
 
       connection?.input?.listen((Uint8List data) {
-        Dev.log('${data}');
-        // messageBuffer.;
+        Dev.log('-----${data}');
+        // messageBuffer.addAll(data);
       }).onDone(() => Dev.log('Disconnected'));
     } catch (e) {
       Dev.log('Cannot connect');
