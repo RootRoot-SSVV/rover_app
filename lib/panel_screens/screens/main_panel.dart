@@ -7,6 +7,7 @@ class MainPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<Panels>(context, listen: false).changeToModule(context, 16);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

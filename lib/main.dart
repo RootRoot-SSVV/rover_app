@@ -12,6 +12,7 @@ import 'package:rover_app/screens/device_list_screen.dart';
 import 'package:rover_app/screens/privacy_policy_screen.dart';
 import 'package:rover_app/screens/rover_control_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rover_app/themes/blue.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,41 +56,10 @@ class MainApp extends StatelessWidget {
         providers: [ChangeNotifierProvider(create: (_) => LocaleProvider())],
         child: Consumer<LocaleProvider>(builder: (context, provider, snapshot) {
           return MaterialApp.router(
-              theme: ThemeData(
-                  useMaterial3: true,
-                  colorScheme: const ColorScheme(
-                    brightness: Brightness.dark,
-                    primary: Color(0xFFA5C8FF),
-                    onPrimary: Color(0xFF00315F),
-                    primaryContainer: Color(0xFF004786),
-                    onPrimaryContainer: Color(0xFFD4E3FF),
-                    secondary: Color(0xFFBCC7DC),
-                    onSecondary: Color(0xFF273141),
-                    secondaryContainer: Color(0xFF3D4758),
-                    onSecondaryContainer: Color(0xFFD8E3F8),
-                    tertiary: Color(0xFFA1C9FF),
-                    onTertiary: Color(0xFF00325B),
-                    tertiaryContainer: Color(0xFF004880),
-                    onTertiaryContainer: Color(0xFFD2E4FF),
-                    error: Color(0xFFFFB4AB),
-                    errorContainer: Color(0xFF93000A),
-                    onError: Color(0xFF690005),
-                    onErrorContainer: Color(0xFFFFDAD6),
-                    background: Color(0xFF1A1C1E),
-                    onBackground: Color(0xFFE3E2E6),
-                    surface: Color(0xFF1A1C1E),
-                    onSurface: Color(0xFFE3E2E6),
-                    surfaceVariant: Color(0xFF43474E),
-                    onSurfaceVariant: Color(0xFFC3C6CF),
-                    outline: Color(0xFF8D9199),
-                    onInverseSurface: Color(0xFF1A1C1E),
-                    inverseSurface: Color(0xFFE3E2E6),
-                    inversePrimary: Color(0xFF1E5FA6),
-                    shadow: Color(0xFF000000),
-                    surfaceTint: Color(0xFFA5C8FF),
-                    outlineVariant: Color(0xFF43474E),
-                    scrim: Color(0xFF000000),
-                  )),
+              theme:
+                  ThemeData(useMaterial3: true, colorScheme: lightBlueScheme),
+              darkTheme:
+                  ThemeData(useMaterial3: true, colorScheme: darkBlueScheme),
               localizationsDelegates: const [
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,

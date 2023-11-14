@@ -20,8 +20,7 @@ class Panels extends ChangeNotifier {
 
   void updateLists(BuildContext context) {
     // TODO: not finished
-
-    final _btController = Provider.of<BtController>(context, listen: false);
+    final btController = Provider.of<BtController>(context, listen: false);
 
     listOfPanels.clear();
     listOfTabButtons.clear();
@@ -29,19 +28,16 @@ class Panels extends ChangeNotifier {
     listOfPanels.add(moduleById[16]!);
     listOfTabButtons.add(const Tab(text: 'Home', icon: Icon(Icons.home)));
 
-    for (int i = 0; i < _btController.connectedModules.length; i++) {
-      listOfPanels.add(moduleById[_btController.connectedModules[i]]!);
+    for (int i = 0; i < btController.connectedModules.length; i++) {
+      listOfPanels.add(moduleById[btController.connectedModules[i]]!);
       listOfTabButtons.add(Tab(text: i.toString(), icon: Icon(Icons.clear)));
     }
     notifyListeners();
   }
 
-  void destinationSelected(int index) {
-    currentPageIndex = index;
-    notifyListeners();
-  }
-
-  Widget getCurrentPanel() {
-    return listOfPanels[currentPageIndex];
+  void changeToModule(BuildContext context, int mode) {
+    Provider.of<BtController>(context, listen: false).mode = mode;
+    Provider.of<BtController>(context, listen: false)
+        .sendMessage(changingModule: true);
   }
 }
