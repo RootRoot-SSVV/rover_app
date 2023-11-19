@@ -16,7 +16,7 @@ import 'dart:developer' as dev;
 //     16      =   no special action   [16][movement][]...
 //     17      =   rescan for modules  [17][movement][]...
 //     18      =   disconnect          [18][]
-//     19      =   change module to    [19][movement][moduleId][]...
+//     19      =   change module to    [19][movement][moduleId][]...    // No return message
 //
 
 class BtController extends ChangeNotifier {
@@ -28,6 +28,7 @@ class BtController extends ChangeNotifier {
   List<int> dataForModule = List.filled(62, 0);
   List<int> connectedModules = [];
   late int mode;
+  bool sending = false;
 
   StreamSubscription<BluetoothDiscoveryResult>? _streamSubscription;
   List<BluetoothDiscoveryResult> results =
@@ -149,7 +150,9 @@ class BtController extends ChangeNotifier {
   }
 
   void scanForModules() {
-    // TODO: Sending messages and updating lists
+    mode = 18;
+    sendMessage();
+    mode = 16;
     notifyListeners();
   }
 }

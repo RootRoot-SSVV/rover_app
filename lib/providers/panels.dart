@@ -36,8 +36,11 @@ class Panels extends ChangeNotifier {
   }
 
   void changeToModule(BuildContext context, int mode) {
-    Provider.of<BtController>(context, listen: false).mode = mode;
-    Provider.of<BtController>(context, listen: false)
-        .sendMessage(changingModule: true);
+    final provider = Provider.of<BtController>(context, listen: false);
+    if (provider.mode != mode) {
+      Provider.of<BtController>(context, listen: false).mode = mode;
+      Provider.of<BtController>(context, listen: false)
+          .sendMessage(changingModule: true);
+    }
   }
 }

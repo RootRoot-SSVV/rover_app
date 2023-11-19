@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rover_app/providers/bt_controller.dart';
 import 'package:rover_app/providers/panels.dart';
 
 class MainPanel extends StatelessWidget {
@@ -19,10 +20,10 @@ class MainPanel extends StatelessWidget {
               label: Text('Disconnect')),
           OutlinedButton.icon(
               onPressed: () {
-                
-                // Add sending messages / rescaning
-
-                Provider.of<Panels>(context, listen: false).updateLists(context);
+                Provider.of<BtController>(context, listen: false)
+                    .scanForModules();
+                Provider.of<Panels>(context, listen: false)
+                    .updateLists(context);
               },
               icon: const Icon(Icons.replay),
               label: Text('Rescan')),
