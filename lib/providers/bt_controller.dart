@@ -23,12 +23,11 @@ class BtController extends ChangeNotifier {
   BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
   bool bluetoothIsOn = true;
 
-  Uint8List messageBuffer = Uint8List(64);
+  List<int> inputBuffer = List<int>.empty(growable: true);
   int motorControl = 0;
   List<int> dataForModule = List.filled(62, 0);
   List<int> connectedModules = [];
   late int mode;
-  bool sending = false;
 
   StreamSubscription<BluetoothDiscoveryResult>? _streamSubscription;
   List<BluetoothDiscoveryResult> results =
@@ -76,6 +75,26 @@ class BtController extends ChangeNotifier {
     });
   }
 
+  BtController.fromCollection(this.connection) {
+    connection?.input!.listen((data) {
+      dev.log('.');
+      inputBuffer += data;
+
+      while (true) {
+        int index = inputBuffer.indexOf(254);
+        if (index >= 0 && inputBuffer.length - index > 65) {
+          dev.log(
+              'input buffer >> ${inputBuffer.getRange(index, index + 64).join(', ')}');
+          inputBuffer.removeRange(0, index + 65);
+        } else {
+          break;
+        }
+      }
+    }).onDone(() {
+      dev.log('Disconnected');
+    });
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -115,18 +134,10 @@ class BtController extends ChangeNotifier {
     startDiscovery();
   }
 
-  void connectWith(String address) async {
+  Future<BtController> connectWith(String address) async {
     _streamSubscription?.cancel();
-
-    try {
-      connection = await BluetoothConnection.toAddress(address);
-
-      connection?.input?.listen((Uint8List data) {
-        // Message receiving, probably
-      }).onDone(() => dev.log('Disconnected'));
-    } catch (e) {
-      dev.log('Cannot connect');
-    }
+    connection = await BluetoothConnection.toAddress(address);
+    return BtController.fromCollection(connection);
   }
 
   void sendMessage({bool changingModule = false}) async {
@@ -139,7 +150,7 @@ class BtController extends ChangeNotifier {
           Uint8List.fromList([19, motorControl, mode] + List.filled(61, 0));
     }
 
-    dev.log('$message');
+    dev.log('sending >> [${message.length}]$message');
 
     try {
       connection!.output.add(message);
