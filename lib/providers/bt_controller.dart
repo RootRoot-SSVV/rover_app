@@ -144,10 +144,10 @@ class BtController extends ChangeNotifier {
     Uint8List message;
 
     if (!changingModule) {
-      message = Uint8List.fromList([mode, motorControl] + dataForModule);
+      message = Uint8List.fromList([254, mode, motorControl] + dataForModule);
     } else {
       message =
-          Uint8List.fromList([19, motorControl, mode] + List.filled(61, 0));
+          Uint8List.fromList([254, 19, motorControl, mode] + List.filled(61, 0));
     }
 
     dev.log('sending >> [${message.length}]$message');
