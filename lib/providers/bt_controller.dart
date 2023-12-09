@@ -4,8 +4,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
-import 'dart:developer' as dev;
+import 'package:provider/provider.dart';
+import 'package:rover_app/providers/panels.dart';
 
+import 'dart:developer' as dev;
 // Communication rules:
 //
 // Sending:
@@ -24,9 +26,13 @@ class BtController extends ChangeNotifier {
   bool bluetoothIsOn = true;
 
   List<int> inputBuffer = List<int>.empty(growable: true);
+
+  StreamController<List<int>> controller = StreamController();
+  late Stream<List<int>> dataReceived;
+
   int motorControl = 0;
   List<int> dataForModule = List.filled(62, 0);
-  List<int> connectedModules = [];
+  List<int> connectedModules = List<int>.empty(growable: true);
   late int mode;
 
   StreamSubscription<BluetoothDiscoveryResult>? _streamSubscription;
@@ -45,7 +51,6 @@ class BtController extends ChangeNotifier {
 
   BtController() {
     mode = 16;
-
     dev.log('$_bluetoothState');
     FlutterBluetoothSerial.instance.state
         .then((state) => _bluetoothState = state);
@@ -77,15 +82,16 @@ class BtController extends ChangeNotifier {
 
   BtController.fromCollection(this.connection) {
     connection?.input!.listen((data) {
-      dev.log('.');
       inputBuffer += data;
 
       while (true) {
         int index = inputBuffer.indexOf(254);
-        if (index >= 0 && inputBuffer.length - index > 65) {
-          dev.log(
-              'input buffer >> ${inputBuffer.getRange(index, index + 64).join(', ')}');
-          inputBuffer.removeRange(0, index + 65);
+        if (index >= 0 && inputBuffer.length - index >= 32) {
+          // dev.log(inputBuffer.getRange(index, index + 32).join(', '));
+          controller.add(inputBuffer.getRange(index + 1, index + 32).toList());
+          // controller.close();
+
+          inputBuffer.removeRange(0, index + 32);
         } else {
           break;
         }
@@ -146,23 +152,31 @@ class BtController extends ChangeNotifier {
     if (!changingModule) {
       message = Uint8List.fromList([254, mode, motorControl] + dataForModule);
     } else {
-      message =
-          Uint8List.fromList([254, 19, motorControl, mode] + List.filled(61, 0));
+      message = Uint8List.fromList(
+          [254, 19, motorControl, mode] + List.filled(61, 0));
     }
 
-    dev.log('sending >> [${message.length}]$message');
+    // dev.log('sending >> [${message.length}]$message');
 
     try {
       connection!.output.add(message);
       await connection!.output.allSent;
     } catch (e) {
-      dev.log('Catch in send message');
+      dev.log('Catch in: void sendMessage()');
     }
   }
 
-  void scanForModules() {
+  void scanForModules(BuildContext context) async {
     mode = 18;
+    dataReceived = controller.stream;
     sendMessage();
+
+    dataReceived.listen((data) {
+      dev.log('data received to stream: $data');
+    }).onDone(() {
+      dev.log('Stream is closed');
+    });
+
     mode = 16;
     notifyListeners();
   }

@@ -18,18 +18,16 @@ class Panels extends ChangeNotifier {
 
   List<Tab> listOfTabButtons = [Tab(text: 'Home', icon: Icon(Icons.home))];
 
-  void updateLists(BuildContext context) {
+  void updateLists(List<int> connectedModules) {
     // TODO: not finished
-    final btController = Provider.of<BtController>(context, listen: false);
-
     listOfPanels.clear();
     listOfTabButtons.clear();
 
     listOfPanels.add(moduleById[16]!);
     listOfTabButtons.add(const Tab(text: 'Home', icon: Icon(Icons.home)));
 
-    for (int i = 0; i < btController.connectedModules.length; i++) {
-      listOfPanels.add(moduleById[btController.connectedModules[i]]!);
+    for (int i = 0; i < connectedModules.length; i++) {
+      listOfPanels.add(moduleById[connectedModules[i]]!);
       listOfTabButtons.add(Tab(text: i.toString(), icon: Icon(Icons.clear)));
     }
     notifyListeners();
