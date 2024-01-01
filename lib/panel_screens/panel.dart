@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rover_app/providers/panels.dart';
 
-import 'dart:developer' as dev;
-
 class Panel extends StatelessWidget {
   const Panel({super.key});
 
   @override
   Widget build(BuildContext context) {
-    dev.log('Rebuilding');
+    // Using Consumer<Panels> to listen to changes in Panels provider
     return Consumer<Panels>(
       builder: (context, panelsProvider, child) {
+        // The UI inside here will rebuild whenever Panels notifies its listeners
         return DefaultTabController(
           length: panelsProvider.listOfPanels.length,
           child: Scaffold(

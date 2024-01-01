@@ -69,7 +69,8 @@ class MainApp extends StatelessWidget {
               supportedLocales: L10n.all,
               routerConfig: _router,
               debugShowCheckedModeBanner: false,
-              locale: provider.locale);
+              locale: provider.locale
+              );
         }));
   }
 }

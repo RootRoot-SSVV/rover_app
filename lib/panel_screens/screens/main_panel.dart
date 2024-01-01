@@ -15,16 +15,19 @@ class MainPanel extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           OutlinedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.bluetooth_disabled),
-              label: Text('Disconnect')),
-          OutlinedButton.icon(
-              onPressed: () {
-                Provider.of<BtController>(context, listen: false)
-                    .scanForModules();
-              },
-              icon: const Icon(Icons.replay),
-              label: Text('Rescan')),
+            onPressed: () {},
+            icon: const Icon(Icons.bluetooth_disabled),
+            label: Text('Disconnect'),
+          ),
+          Consumer<BtController>(
+            builder: (context, btController, child) {
+              return OutlinedButton.icon(
+                onPressed: () => btController.scanForModules(),
+                icon: const Icon(Icons.replay),
+                label: Text('Rescan'),
+              );
+            },
+          ),
         ],
       ),
     );

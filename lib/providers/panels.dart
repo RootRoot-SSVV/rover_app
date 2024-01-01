@@ -21,7 +21,6 @@ class Panels extends ChangeNotifier {
   List<Tab> listOfTabButtons = [Tab(text: 'Home', icon: Icon(Icons.home))];
 
   void updateLists(List<int> message) {
-    dev.log('amogus');
     List<int> connectedModules = List.from(message.getRange(2, 2 + message[1]));
 
     listOfPanels.clear();

@@ -75,6 +75,7 @@ class BtController extends ChangeNotifier {
       default:
         dev.log('no case');
     }
+    notifyListeners();
   }
 
   BtController.fromCollection(this.connection) {
@@ -92,6 +93,7 @@ class BtController extends ChangeNotifier {
           break;
         }
       }
+      notifyListeners();
     }).onDone(() {
       dev.log('Disconnected');
     });
