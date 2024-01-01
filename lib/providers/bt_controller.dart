@@ -42,9 +42,9 @@ class BtController extends ChangeNotifier {
 
   BluetoothConnection? connection;
 
-  Panels _panelsProvider = Panels();
+  final Panels _panelsProvider;
 
-  BtController() {
+  BtController(this._panelsProvider) {
     FlutterBluetoothSerial.instance.state
         .then((state) => _bluetoothState = state);
 
@@ -78,7 +78,7 @@ class BtController extends ChangeNotifier {
     notifyListeners();
   }
 
-  BtController.fromCollection(this.connection) {
+  BtController.fromCollection(this.connection, this._panelsProvider) {
     connection?.input!.listen((data) {
       inputBuffer += data;
 
@@ -141,7 +141,7 @@ class BtController extends ChangeNotifier {
   Future<BtController> connectWith(String address) async {
     _streamSubscription?.cancel();
     connection = await BluetoothConnection.toAddress(address);
-    return BtController.fromCollection(connection);
+    return BtController.fromCollection(connection, _panelsProvider);
   }
 
   void sendMessage({bool changingModule = false}) async {

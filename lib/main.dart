@@ -18,6 +18,10 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+  Panels panels = Panels();
+  BtController btController = BtController(panels);
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeRight,
     DeviceOrientation.landscapeLeft,
@@ -29,8 +33,8 @@ void main() {
       Permission.bluetoothScan
     ].request().then((status) {
       runApp(MultiProvider(providers: [
-        ChangeNotifierProvider(create: (_) => BtController()),
-        ChangeNotifierProvider(create: (_) => Panels())
+        ChangeNotifierProvider(create: (_) => btController),
+        ChangeNotifierProvider(create: (_) => panels)
       ], child: MainApp()));
     });
   });
@@ -69,8 +73,7 @@ class MainApp extends StatelessWidget {
               supportedLocales: L10n.all,
               routerConfig: _router,
               debugShowCheckedModeBanner: false,
-              locale: provider.locale
-              );
+              locale: provider.locale);
         }));
   }
 }
