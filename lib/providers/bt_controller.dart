@@ -3,11 +3,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
-
 import 'package:provider/provider.dart';
-import 'package:rover_app/providers/panels.dart';
 
 import 'dart:developer' as dev;
+
+import 'package:rover_app/providers/panels.dart';
 // Communication rules:
 //
 // Sending:
@@ -27,13 +27,10 @@ class BtController extends ChangeNotifier {
 
   List<int> inputBuffer = List<int>.empty(growable: true);
 
-  StreamController<List<int>> controller = StreamController();
-  late Stream<List<int>> dataReceived;
-
   int motorControl = 0;
   List<int> dataForModule = List.filled(62, 0);
   List<int> connectedModules = List<int>.empty(growable: true);
-  late int mode;
+  int mode = 16;
 
   StreamSubscription<BluetoothDiscoveryResult>? _streamSubscription;
   List<BluetoothDiscoveryResult> results =
@@ -41,21 +38,16 @@ class BtController extends ChangeNotifier {
 
   bool isDiscovering = false;
 
-  String _address = "...";
-  String _name = "...";
-
   Timer? _discoverableTimeoutTimer;
-  int _discoverableTimeoutSecondsLeft = 0;
 
   BluetoothConnection? connection;
 
+  Panels _panelsProvider = Panels();
+
   BtController() {
-    mode = 16;
-    dev.log('$_bluetoothState');
     FlutterBluetoothSerial.instance.state
         .then((state) => _bluetoothState = state);
 
-    dev.log('$_bluetoothState');
     notifyListeners();
 
     Future.doWhile(() async {
@@ -64,20 +56,25 @@ class BtController extends ChangeNotifier {
       }
       await Future.delayed(const Duration(milliseconds: 0xDD));
       return true;
-    }).then((_) {
-      FlutterBluetoothSerial.instance.address
-          .then((address) => _address = address!);
-    });
-
-    FlutterBluetoothSerial.instance.name.then((name) => _name = name!);
+    }).then((_) {});
 
     FlutterBluetoothSerial.instance
         .onStateChanged()
         .listen((BluetoothState state) {
       _bluetoothState = state;
       _discoverableTimeoutTimer = null;
-      _discoverableTimeoutSecondsLeft = 0;
     });
+  }
+
+  /// Here add all functions for module panels update
+  void messageReaction(List<int> message) {
+    switch (message[0]) {
+      case 17:
+        _panelsProvider.updateLists(message);
+        break;
+      default:
+        dev.log('no case');
+    }
   }
 
   BtController.fromCollection(this.connection) {
@@ -86,12 +83,11 @@ class BtController extends ChangeNotifier {
 
       while (true) {
         int index = inputBuffer.indexOf(254);
-        if (index >= 0 && inputBuffer.length - index >= 32) {
-          // dev.log(inputBuffer.getRange(index, index + 32).join(', '));
-          controller.add(inputBuffer.getRange(index + 1, index + 32).toList());
-          // controller.close();
-
-          inputBuffer.removeRange(0, index + 32);
+        if (index >= 0 && inputBuffer.length - index >= 60) {
+          List<int> dataReceivedList =
+              List.from(inputBuffer.getRange(index + 1, index + 60));
+          messageReaction(dataReceivedList);
+          inputBuffer.removeRange(0, index + 60);
         } else {
           break;
         }
@@ -148,15 +144,12 @@ class BtController extends ChangeNotifier {
 
   void sendMessage({bool changingModule = false}) async {
     Uint8List message;
-
     if (!changingModule) {
       message = Uint8List.fromList([254, mode, motorControl] + dataForModule);
     } else {
       message = Uint8List.fromList(
           [254, 19, motorControl, mode] + List.filled(61, 0));
     }
-
-    // dev.log('sending >> [${message.length}]$message');
 
     try {
       connection!.output.add(message);
@@ -166,17 +159,9 @@ class BtController extends ChangeNotifier {
     }
   }
 
-  void scanForModules(BuildContext context) async {
+  void scanForModules() async {
     mode = 18;
-    dataReceived = controller.stream;
     sendMessage();
-
-    dataReceived.listen((data) {
-      dev.log('data received to stream: $data');
-    }).onDone(() {
-      dev.log('Stream is closed');
-    });
-
     mode = 16;
     notifyListeners();
   }

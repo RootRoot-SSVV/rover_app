@@ -24,7 +24,7 @@ class RoverControlScreen extends StatelessWidget {
                   ],
                 ),
               )),
-          const Expanded(flex: 6, child: Panel()),
+          Expanded(flex: 6, child: Panel()),
           Expanded(
               flex: 2,
               child: Center(

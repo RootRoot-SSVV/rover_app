@@ -21,7 +21,7 @@ class MainPanel extends StatelessWidget {
           OutlinedButton.icon(
               onPressed: () {
                 Provider.of<BtController>(context, listen: false)
-                    .scanForModules(context);
+                    .scanForModules();
               },
               icon: const Icon(Icons.replay),
               label: Text('Rescan')),
