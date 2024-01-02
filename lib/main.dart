@@ -4,17 +4,24 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:rover_app/bluetooth/bt_controller.dart';
+import 'package:rover_app/providers/bt_controller.dart';
 import 'package:rover_app/l10n/l10n.dart';
 import 'package:rover_app/l10n/locale_provider.dart';
+import 'package:rover_app/providers/panels.dart';
 import 'package:rover_app/screens/device_list_screen.dart';
 import 'package:rover_app/screens/privacy_policy_screen.dart';
 import 'package:rover_app/screens/rover_control_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rover_app/themes/blue.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+  Panels panels = Panels();
+  BtController btController = BtController(panels);
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeRight,
     DeviceOrientation.landscapeLeft,
@@ -25,9 +32,10 @@ void main() {
       Permission.bluetoothConnect,
       Permission.bluetoothScan
     ].request().then((status) {
-      runApp(MultiProvider(
-          providers: [ChangeNotifierProvider(create: (_) => BtController())],
-          child: MainApp()));
+      runApp(MultiProvider(providers: [
+        ChangeNotifierProvider(create: (_) => btController),
+        ChangeNotifierProvider(create: (_) => panels)
+      ], child: MainApp()));
     });
   });
 }
@@ -38,7 +46,9 @@ final GoRouter _router = GoRouter(routes: <RouteBase>[
     path: '/controlScreen',
     builder: (context, state) => RoverControlScreen(),
   ),
-  GoRoute(path: '/privacyPolicy', builder: (context, state) => const PrivacyPolicyScreen())
+  GoRoute(
+      path: '/privacyPolicy',
+      builder: (context, state) => const PrivacyPolicyScreen())
 ]);
 
 class MainApp extends StatelessWidget {
@@ -50,6 +60,10 @@ class MainApp extends StatelessWidget {
         providers: [ChangeNotifierProvider(create: (_) => LocaleProvider())],
         child: Consumer<LocaleProvider>(builder: (context, provider, snapshot) {
           return MaterialApp.router(
+              theme:
+                  ThemeData(useMaterial3: true, colorScheme: lightBlueScheme),
+              darkTheme:
+                  ThemeData(useMaterial3: true, colorScheme: darkBlueScheme),
               localizationsDelegates: const [
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
