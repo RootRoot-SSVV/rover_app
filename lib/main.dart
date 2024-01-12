@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:rover_app/providers/bt_controller.dart';
 import 'package:rover_app/l10n/l10n.dart';
 import 'package:rover_app/l10n/locale_provider.dart';
+import 'package:rover_app/providers/modules/demo_module_provider.dart';
 import 'package:rover_app/providers/panels.dart';
 import 'package:rover_app/screens/device_list_screen.dart';
 import 'package:rover_app/screens/privacy_policy_screen.dart';
@@ -19,8 +20,15 @@ void main() {
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
+  // Providers for modules
+
+  DemoModuleProvider demoModuleProvider = DemoModuleProvider();
+
+  // ---------------------
+
   Panels panels = Panels();
-  BtController btController = BtController(panels);
+
+  BtController btController = BtController(panels, demoModuleProvider);
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeRight,
@@ -34,7 +42,8 @@ void main() {
     ].request().then((status) {
       runApp(MultiProvider(providers: [
         ChangeNotifierProvider(create: (_) => btController),
-        ChangeNotifierProvider(create: (_) => panels)
+        ChangeNotifierProvider(create: (_) => panels),
+        ChangeNotifierProvider(create: (_) => demoModuleProvider)
       ], child: MainApp()));
     });
   });
