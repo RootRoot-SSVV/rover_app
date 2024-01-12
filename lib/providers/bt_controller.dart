@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
-import 'package:provider/provider.dart';
+import 'package:rover_app/providers/modules/demo_module_provider.dart';
 
 import 'dart:developer' as dev;
 
@@ -22,6 +22,12 @@ import 'package:rover_app/providers/panels.dart';
 //
 
 class BtController extends ChangeNotifier {
+  // Providers for modules
+
+  final DemoModuleProvider demoModuleProvider;
+
+  // ---------------------
+
   BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
   bool bluetoothIsOn = true;
 
@@ -44,7 +50,7 @@ class BtController extends ChangeNotifier {
 
   final Panels _panelsProvider;
 
-  BtController(this._panelsProvider) {
+  BtController(this._panelsProvider, this.demoModuleProvider) {
     FlutterBluetoothSerial.instance.state
         .then((state) => _bluetoothState = state);
 
@@ -69,6 +75,9 @@ class BtController extends ChangeNotifier {
   /// Here add all functions for module panels update
   void messageReaction(List<int> message) {
     switch (message[0]) {
+      case 1:
+        // No response
+        break;
       case 17:
         _panelsProvider.updateLists(message);
         break;
@@ -78,7 +87,8 @@ class BtController extends ChangeNotifier {
     notifyListeners();
   }
 
-  BtController.fromCollection(this.connection, this._panelsProvider) {
+  BtController.fromCollection(
+      this.connection, this._panelsProvider, this.demoModuleProvider) {
     connection?.input!.listen((data) {
       inputBuffer += data;
 
@@ -141,7 +151,14 @@ class BtController extends ChangeNotifier {
   Future<BtController> connectWith(String address) async {
     _streamSubscription?.cancel();
     connection = await BluetoothConnection.toAddress(address);
-    return BtController.fromCollection(connection, _panelsProvider);
+    return BtController.fromCollection(
+        connection, _panelsProvider, demoModuleProvider);
+  }
+
+  void changeDataForModule(List<int> list) {
+    for (int i = 0; i < list.length; i++) {
+      dataForModule[i] = list[i];
+    }
   }
 
   void sendMessage({bool changingModule = false}) async {
@@ -152,6 +169,8 @@ class BtController extends ChangeNotifier {
       message = Uint8List.fromList(
           [254, 19, motorControl, mode] + List.filled(61, 0));
     }
+
+    dev.log('---> $message');
 
     try {
       connection!.output.add(message);

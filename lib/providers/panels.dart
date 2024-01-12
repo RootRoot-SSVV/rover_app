@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rover_app/panel_screens/screens/demo_module.dart';
 import 'package:rover_app/panel_screens/screens/main_panel.dart';
-import 'package:rover_app/panel_screens/screens/temperature_module.dart';
-import 'package:rover_app/panel_screens/screens/ultrasonic_module.dart';
 import 'package:rover_app/providers/bt_controller.dart';
 
 import 'dart:developer' as dev;
@@ -10,8 +9,7 @@ import 'dart:developer' as dev;
 class Panels extends ChangeNotifier {
   final Map<int, StatelessWidget> moduleById = {
     16: const MainPanel(),
-    0: const TemperatureModule(),
-    1: const UltrasonicModule()
+    1: const DemoModulePanel()
   };
 
   int currentPageIndex = 0;
@@ -45,18 +43,5 @@ class Panels extends ChangeNotifier {
       Provider.of<BtController>(context, listen: false)
           .sendMessage(changingModule: true);
     }
-  }
-
-  Widget foo() {
-    return DefaultTabController(
-        length: listOfPanels.length,
-        child: Scaffold(
-          bottomNavigationBar: TabBar(
-              tabs: listOfTabButtons,
-              isScrollable: (listOfPanels.length > 7),
-              physics: const BouncingScrollPhysics(),
-              labelColor: Colors.blueGrey),
-          body: TabBarView(children: listOfPanels),
-        ));
   }
 }
