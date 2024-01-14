@@ -20,16 +20,17 @@ void main() {
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-  // Providers for modules
+  /// Provideri za module
 
   DemoModuleProvider demoModuleProvider = DemoModuleProvider();
 
-  // ---------------------
+  /// ---------------------
 
+  /// Provideri za panele i Bluetooth
   Panels panels = Panels();
-
   BtController btController = BtController(panels, demoModuleProvider);
 
+  /// Paljenje aplikacije i postavljane je horizontalno
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeRight,
     DeviceOrientation.landscapeLeft,
@@ -49,6 +50,7 @@ void main() {
   });
 }
 
+/// Svi ekrani
 final GoRouter _router = GoRouter(routes: <RouteBase>[
   GoRoute(path: '/', builder: (context, state) => DeviceListScreen()),
   GoRoute(
@@ -60,6 +62,7 @@ final GoRouter _router = GoRouter(routes: <RouteBase>[
       builder: (context, state) => const PrivacyPolicyScreen())
 ]);
 
+/// Postavljanje lokalizacije i teme aplikacije
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 

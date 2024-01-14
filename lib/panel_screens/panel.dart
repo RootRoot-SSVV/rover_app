@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rover_app/providers/panels.dart';
 
+/// Središnji dio ekrana
+/// 
+/// Sadrži [TabBarView] kojim se kontrolira biranje modula
 class Panel extends StatelessWidget {
   const Panel({super.key});
 

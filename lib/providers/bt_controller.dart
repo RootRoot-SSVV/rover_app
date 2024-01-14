@@ -8,48 +8,56 @@ import 'package:rover_app/providers/modules/demo_module_provider.dart';
 import 'dart:developer' as dev;
 
 import 'package:rover_app/providers/panels.dart';
-// Communication rules:
-//
-// Sending:
-// data_buffer = [mode][movement][additional data][additional data]...
-//
-// modes:
-//     0-15    =   module selection    [0-15][movement][]...
-//     16      =   no special action   [16][movement][]...
-//     17      =   rescan for modules  [17][movement][]...
-//     18      =   disconnect          [18][]
-//     19      =   change module to    [19][movement][moduleId][]...    // No return message
-//
 
+/// Provider za Bluetooth. Sadrži svu logiku za slanje i primanje
+///
+/// Šalje se i prima niz brojeva. Prva tri polja su važna jer određuju što se
+/// kontrolira.
+/// Pravila komunikacije:
+///
+/// Niz koji se šalje:
+/// [254][ID moda][smjer pokretanja][ostali podaci] ... [ostali podaci]
+///
+/// [254]               ->  Početno polje
+/// [ID moda]           ->  Id koji služi za kontrolu modula ili drugu
+///                         specijalnu akciju
+/// [smjer pokretanja]  ->  U binarnom obliku sprema koji je motor upaljen
+/// [ostali podaci]     ->  Podaci koji su potrebni za modul
+///
+/// ID moda:
+///   1 - 15  ->  moduli
+///   16      ->  nema posebne akcije
+///   17      ->  ponovno skeniraj module
+///   19      ->  promjeni modul
 class BtController extends ChangeNotifier {
-  // Providers for modules
+  /// Provideri za module
 
   final DemoModuleProvider demoModuleProvider;
 
-  // ---------------------
+  ///
 
-  BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
-  bool bluetoothIsOn = true;
+  /// Provider za panele
+  final Panels _panelsProvider;
 
+  /// Podaci koji se šalju i primaju putem Bluetooth-a
   List<int> inputBuffer = List<int>.empty(growable: true);
-
   int motorControl = 0;
   List<int> dataForModule = List.filled(62, 0);
   List<int> connectedModules = List<int>.empty(growable: true);
   int mode = 16;
 
+  /// Vrijednosti koje služe za spajanje i održavanje povezanosti s roverom
+  BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
+  bool bluetoothIsOn = true;
   StreamSubscription<BluetoothDiscoveryResult>? _streamSubscription;
   List<BluetoothDiscoveryResult> results =
       List<BluetoothDiscoveryResult>.empty(growable: true);
-
   bool isDiscovering = false;
-
   Timer? _discoverableTimeoutTimer;
-
   BluetoothConnection? connection;
 
-  final Panels _panelsProvider;
-
+  /// Konstruktor za [BtController] zahtjeva Provider za panele i module.
+  /// Pri svakom stvaranju modula dodati argument
   BtController(this._panelsProvider, this.demoModuleProvider) {
     FlutterBluetoothSerial.instance.state
         .then((state) => _bluetoothState = state);
@@ -72,21 +80,9 @@ class BtController extends ChangeNotifier {
     });
   }
 
-  /// Here add all functions for module panels update
-  void messageReaction(List<int> message) {
-    switch (message[0]) {
-      case 1:
-        // No response
-        break;
-      case 17:
-        _panelsProvider.updateLists(message);
-        break;
-      default:
-        dev.log('no case');
-    }
-    notifyListeners();
-  }
-
+  /// Kreni prikupljanje podataka.
+  /// Kada se prikupi dovoljno podataka izvrši akciju (60 bitova).
+  /// Nakon obrade izbriši podatke iz [inputBuffer].
   BtController.fromCollection(
       this.connection, this._panelsProvider, this.demoModuleProvider) {
     connection?.input!.listen((data) {
@@ -109,13 +105,17 @@ class BtController extends ChangeNotifier {
     });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    FlutterBluetoothSerial.instance.setPairingRequestHandler(null);
-    _discoverableTimeoutTimer?.cancel();
+  /// Spoji se s Bluetooth uređajem s zadanom adresom
+  Future<BtController> connectWith(String address) async {
+    _streamSubscription?.cancel();
+    connection = await BluetoothConnection.toAddress(address);
+    return BtController.fromCollection(
+        connection, _panelsProvider, demoModuleProvider);
   }
 
+  /// Započni traženje uređaja
+  ///
+  /// Pri svakom nađenom uređaju osvježi zaslon
   void startDiscovery() {
     if (_bluetoothState == BluetoothState.ERROR ||
         _bluetoothState == BluetoothState.STATE_OFF ||
@@ -141,6 +141,7 @@ class BtController extends ChangeNotifier {
     });
   }
 
+  /// Izbriši rezultate i ponovno skeniraj
   void restartDiscovery() {
     results.clear();
     isDiscovering = true;
@@ -148,19 +149,102 @@ class BtController extends ChangeNotifier {
     startDiscovery();
   }
 
-  Future<BtController> connectWith(String address) async {
-    _streamSubscription?.cancel();
-    connection = await BluetoothConnection.toAddress(address);
-    return BtController.fromCollection(
-        connection, _panelsProvider, demoModuleProvider);
+  /// Odspoji se od uređaja
+  @override
+  void dispose() {
+    super.dispose();
+    FlutterBluetoothSerial.instance.setPairingRequestHandler(null);
+    _discoverableTimeoutTimer?.cancel();
   }
 
+  /// Pridruži funkcije zadanom ID-u i modulu
+  ///
+  /// Na osnovu prvog polja biti će drugačija reakcija
+  /// Reakcija se dodaje samo modulima koji imaju povratnu poruku roveru
+  void messageReaction(List<int> message) {
+    switch (message[0]) {
+      case 1:
+
+        /// Demo modul
+        /// Nema povratnu informaciju
+        break;
+      case 2:
+
+        /// ID je neiskorišten
+        break;
+      case 3:
+
+        /// ID je neiskorišten
+        break;
+      case 4:
+
+        /// ID je neiskorišten
+        break;
+      case 5:
+
+        /// ID je neiskorišten
+        break;
+      case 6:
+
+        /// ID je neiskorišten
+        break;
+      case 7:
+
+        /// ID je neiskorišten
+        break;
+      case 8:
+
+        /// ID je neiskorišten
+        break;
+      case 9:
+
+        /// ID je neiskorišten
+        break;
+      case 10:
+
+        /// ID je neiskorišten
+        break;
+      case 11:
+
+        /// ID je neiskorišten
+        break;
+      case 12:
+
+        /// ID je neiskorišten
+        break;
+      case 13:
+
+        /// ID je neiskorišten
+        break;
+      case 14:
+
+        /// ID je neiskorišten
+        break;
+      case 15:
+
+        /// ID je neiskorišten
+        break;
+      case 17:
+
+        /// Ponovno skeniranje
+        _panelsProvider.updateLists(message);
+        break;
+      default:
+        dev.log('no case');
+    }
+    notifyListeners();
+  }
+
+  /// Promjeni [dataForModule]
+  ///
+  /// Promjeni samo dio koji se ondosi na podatke za modul
   void changeDataForModule(List<int> list) {
     for (int i = 0; i < list.length; i++) {
       dataForModule[i] = list[i];
     }
   }
 
+  /// Pošalji poruku roveru
   void sendMessage({bool changingModule = false}) async {
     Uint8List message;
     if (!changingModule) {
@@ -180,6 +264,9 @@ class BtController extends ChangeNotifier {
     }
   }
 
+  /// Šalje signal za skeniranje modula
+  ///
+  /// Mijenja mod na skeniranje (18), šalje poruku i vraća na neutralno (16)
   void scanForModules() async {
     mode = 18;
     sendMessage();

@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:rover_app/providers/bt_controller.dart';
 
+/// Demo modul provider
+///
+/// Sadrži 3 LED diode, zujalicu i jednu RGB diodu.
+/// Modul NE prima podatke.
+/// Šalje podatke u formatu:
+///   [led1][led2][led3][red][green][blue][zujalica]
 class DemoModuleProvider extends ChangeNotifier {
   bool led1 = false, led2 = false, led3 = false;
   double red = 0, green = 0, blue = 0;
 
+  /// Iduće tri funkcije mijenjaju vrijednost i šalju poruku
   void led1Change(bool value, BtController bt) {
     led1 = value;
     sendMessage(bt);
@@ -23,6 +30,7 @@ class DemoModuleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Iduće funkcije mijenjaju RGB vrijednosti
   void redChange(double value, BtController bt) {
     red = value;
     notifyListeners();
@@ -38,6 +46,7 @@ class DemoModuleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Funckija slanja poruke u zadanom formatu
   void sendMessage(BtController bt) {
     List<int> message = [
       led1 ? 1 : 0,
