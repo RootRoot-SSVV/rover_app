@@ -6,7 +6,10 @@ import 'package:rover_app/providers/bt_controller.dart';
 
 import 'dart:developer' as dev;
 
+/// Provider za kontroliranje panela (ekrana modula)
 class Panels extends ChangeNotifier {
+  /// Informacije o trenutnom panelu i ID svih panela
+
   final Map<int, StatelessWidget> moduleById = {
     16: const MainPanel(),
     1: const DemoModulePanel()
@@ -18,6 +21,8 @@ class Panels extends ChangeNotifier {
 
   List<Tab> listOfTabButtons = [Tab(text: 'Home', icon: Icon(Icons.home))];
 
+
+  /// Osvježi listu panela i UI
   void updateLists(List<int> message) {
     List<int> connectedModules = List.from(message.getRange(2, 2 + message[1]));
 
@@ -36,6 +41,7 @@ class Panels extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Promjeni modul i pošalji signal za promjenu modula
   void changeToModule(BuildContext context, int mode) {
     final provider = Provider.of<BtController>(context, listen: false);
     if (provider.mode != mode) {

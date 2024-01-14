@@ -4,6 +4,9 @@ import 'package:rover_app/providers/bt_controller.dart';
 import 'package:rover_app/providers/modules/demo_module_provider.dart';
 import 'package:rover_app/providers/panels.dart';
 
+/// UI demo modula
+/// Sadrži tri [Switch]-a, tri [Slider]-a i jedan gumb
+/// Koristi [DemoModuleProvider]
 class DemoModulePanel extends StatelessWidget {
   const DemoModulePanel({super.key});
 
@@ -18,6 +21,8 @@ class DemoModulePanel extends StatelessWidget {
             Row(children: [
               Switch(
                   value: provider.led1,
+
+                  /// Promijeni vrijednost i pošalji poruku.
                   onChanged: (bool value) => provider.led1Change(value,
                       Provider.of<BtController>(context, listen: false))),
               Switch(
@@ -34,6 +39,9 @@ class DemoModulePanel extends StatelessWidget {
                 thumbColor: Colors.red,
                 max: 250,
                 divisions: 25,
+
+                /// Promijeni vrijednost ali pošalji poruku samo kada se
+                /// [Slider] odpusti.
                 onChanged: (value) => provider.redChange(
                     value, Provider.of<BtController>(context, listen: false)),
                 onChangeEnd: (value) => provider.sendMessage(

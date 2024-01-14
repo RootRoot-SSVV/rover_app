@@ -12,9 +12,14 @@ import 'package:rover_app/l10n/locale_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// Prikazuje popis dostupnih uređaja
+///
+/// Sadrži mogućnost mijenjanja jezika, pretraživanja uređaja i spajanja na rover.
+/// Osim toga prikazuje informacije o aplikaciji.
 class DeviceListScreen extends StatelessWidget {
   const DeviceListScreen({super.key});
 
+  /// Funkcija koja otvara repozitoriji repozitoriji projekta ili dokumentaciju
   void launchURL(String urlString) async {
     Uri url = Uri.parse(urlString);
     if (!await launchUrl(url)) {
@@ -25,12 +30,14 @@ class DeviceListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<LocaleProvider>(builder: (context, provider, snapshot) {
+      /// Određuje jezik, jezik uređaja ili odabrani jezik
       var lang = provider.locale ?? Localizations.localeOf(context);
 
       return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.discover_devices),
           actions: <Widget>[
+            /// Stvara [DropdownButton] s popisom jezika
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0),
               child: DropdownButton(
@@ -52,6 +59,9 @@ class DeviceListScreen extends StatelessWidget {
                 },
               ),
             ),
+
+            /// Stvara [IconButton] za informacije, može se pristupiti
+            /// dokumentaciji i licencama
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0),
               child: IconButton(
@@ -65,6 +75,7 @@ class DeviceListScreen extends StatelessWidget {
                           applicationName: appName,
                           applicationVersion: version,
                           children: <Widget>[
+                            /// Popis stvari u [showAboutDialog]-u
                             ListTile(
                                 dense: true,
                                 leading: const Icon(MyIcons.github),
@@ -98,6 +109,9 @@ class DeviceListScreen extends StatelessWidget {
             )
           ],
         ),
+
+        /// Sadržava popis svih skeniranih uređaja i njihove mac adrese.
+        /// Pitiskom na uređaj se započinje spajanje i prebaci na kontrole.
         body: Consumer<BtController>(builder: (context, value, child) {
           return ListView.builder(
             itemCount: value.results.length,
@@ -121,6 +135,11 @@ class DeviceListScreen extends StatelessWidget {
             },
           );
         }),
+
+        /// [FloatingActionButton] koji služi za ponovno skeniranje.
+        ///
+        /// Dok [isDiscovering] je `true` animiraj učitavanje.
+        /// Ako je Bluetooth isključen upozori i izađi iz aplikacije.
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
           child: Provider.of<BtController>(context).isDiscovering

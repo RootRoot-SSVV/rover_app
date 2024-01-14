@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:rover_app/providers/bt_controller.dart';
 import 'package:rover_app/providers/panels.dart';
 
+/// Glavni panel
+/// 
+/// Služi za izlazak iz aplikacije i ponovno skeniranje modula
 class MainPanel extends StatelessWidget {
   const MainPanel({super.key});
 

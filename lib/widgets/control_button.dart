@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rover_app/providers/bt_controller.dart';
 
+/// Gumb koji detektira pritisak i otpuštanje
+/// Šalje se primjerena poruka ovisno o [value]
 class ControlButton extends StatefulWidget {
   final IconData icon;
   final int value;

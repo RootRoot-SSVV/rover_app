@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// Podaci za lokalizaciju
+
 class L10n {
   static const List<Locale> all = [Locale('en'), Locale('hr')];
 }
