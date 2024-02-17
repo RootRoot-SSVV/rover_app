@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:rover_app/providers/modules/demo_module_provider.dart';
+import 'package:rover_app/providers/modules/matrix_module_provider.dart';
+import 'package:rover_app/providers/modules/ultrasonic_module_provider.dart';
 
 import 'dart:developer' as dev;
 
@@ -33,6 +35,8 @@ class BtController extends ChangeNotifier {
   /// Provideri za module
 
   final DemoModuleProvider demoModuleProvider;
+  final UltrasonicModuleProvider ultrasonicModuleProvider;
+  final MatrixModuleProvider matrixModuleProvider;
 
   ///
 
@@ -58,7 +62,11 @@ class BtController extends ChangeNotifier {
 
   /// Konstruktor za [BtController] zahtjeva Provider za panele i module.
   /// Pri svakom stvaranju modula dodati argument
-  BtController(this._panelsProvider, this.demoModuleProvider) {
+  BtController(
+    this._panelsProvider,
+    this.demoModuleProvider,
+    this.ultrasonicModuleProvider, this.matrixModuleProvider,
+  ) {
     FlutterBluetoothSerial.instance.state
         .then((state) => _bluetoothState = state);
 
@@ -83,8 +91,8 @@ class BtController extends ChangeNotifier {
   /// Kreni prikupljanje podataka.
   /// Kada se prikupi dovoljno podataka izvrši akciju (60 bitova).
   /// Nakon obrade izbriši podatke iz [inputBuffer].
-  BtController.fromCollection(
-      this.connection, this._panelsProvider, this.demoModuleProvider) {
+  BtController.fromCollection(this.connection, this._panelsProvider,
+      this.demoModuleProvider, this.ultrasonicModuleProvider, this.matrixModuleProvider) {
     connection?.input!.listen((data) {
       inputBuffer += data;
 
@@ -109,8 +117,8 @@ class BtController extends ChangeNotifier {
   Future<BtController> connectWith(String address) async {
     _streamSubscription?.cancel();
     connection = await BluetoothConnection.toAddress(address);
-    return BtController.fromCollection(
-        connection, _panelsProvider, demoModuleProvider);
+    return BtController.fromCollection(connection, _panelsProvider,
+        demoModuleProvider, ultrasonicModuleProvider, matrixModuleProvider);
   }
 
   /// Započni traženje uređaja
@@ -162,15 +170,15 @@ class BtController extends ChangeNotifier {
   /// Na osnovu prvog polja biti će drugačija reakcija
   /// Reakcija se dodaje samo modulima koji imaju povratnu poruku roveru
   void messageReaction(List<int> message) {
+    dev.log('$message');
     switch (message[0]) {
       case 1:
-
-        /// Demo modul
-        /// Nema povratnu informaciju
+        /// Ultrasonic modul
+        ultrasonicModuleProvider.getDistance(inputBuffer);
         break;
       case 2:
-
-        /// ID je neiskorišten
+        /// Matrix modul
+        /// Nema povratnu informaciju
         break;
       case 3:
 
@@ -190,39 +198,8 @@ class BtController extends ChangeNotifier {
         break;
       case 7:
 
-        /// ID je neiskorišten
-        break;
-      case 8:
-
-        /// ID je neiskorišten
-        break;
-      case 9:
-
-        /// ID je neiskorišten
-        break;
-      case 10:
-
-        /// ID je neiskorišten
-        break;
-      case 11:
-
-        /// ID je neiskorišten
-        break;
-      case 12:
-
-        /// ID je neiskorišten
-        break;
-      case 13:
-
-        /// ID je neiskorišten
-        break;
-      case 14:
-
-        /// ID je neiskorišten
-        break;
-      case 15:
-
-        /// ID je neiskorišten
+        /// Demo modul
+        /// Nema povratnu informaciju
         break;
       case 17:
 
@@ -231,7 +208,9 @@ class BtController extends ChangeNotifier {
         break;
       default:
         dev.log('no case');
+        break;
     }
+
     notifyListeners();
   }
 

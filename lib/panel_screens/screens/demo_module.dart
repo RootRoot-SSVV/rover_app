@@ -12,7 +12,7 @@ class DemoModulePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<Panels>(context, listen: false).changeToModule(context, 1);
+    Provider.of<Panels>(context, listen: false).changeToModule(context, 7);
     return Center(child:
         Consumer<DemoModuleProvider>(builder: (context, provider, child) {
       return Column(

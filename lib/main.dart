@@ -8,6 +8,8 @@ import 'package:rover_app/providers/bt_controller.dart';
 import 'package:rover_app/l10n/l10n.dart';
 import 'package:rover_app/l10n/locale_provider.dart';
 import 'package:rover_app/providers/modules/demo_module_provider.dart';
+import 'package:rover_app/providers/modules/matrix_module_provider.dart';
+import 'package:rover_app/providers/modules/ultrasonic_module_provider.dart';
 import 'package:rover_app/providers/panels.dart';
 import 'package:rover_app/screens/device_list_screen.dart';
 import 'package:rover_app/screens/privacy_policy_screen.dart';
@@ -23,12 +25,16 @@ void main() {
   /// Provideri za module
 
   DemoModuleProvider demoModuleProvider = DemoModuleProvider();
+  UltrasonicModuleProvider ultrasonicModuleProvider =
+      UltrasonicModuleProvider();
+  MatrixModuleProvider matrixModuleProvider = MatrixModuleProvider();
 
   /// ---------------------
 
   /// Provideri za panele i Bluetooth
   Panels panels = Panels();
-  BtController btController = BtController(panels, demoModuleProvider);
+  BtController btController =
+      BtController(panels, demoModuleProvider, ultrasonicModuleProvider, matrixModuleProvider);
 
   /// Paljenje aplikacije i postavljane je horizontalno
   SystemChrome.setPreferredOrientations([
@@ -44,7 +50,9 @@ void main() {
       runApp(MultiProvider(providers: [
         ChangeNotifierProvider(create: (_) => btController),
         ChangeNotifierProvider(create: (_) => panels),
-        ChangeNotifierProvider(create: (_) => demoModuleProvider)
+        ChangeNotifierProvider(create: (_) => demoModuleProvider),
+        ChangeNotifierProvider(create: (_) => ultrasonicModuleProvider),
+        ChangeNotifierProvider(create: (_) => matrixModuleProvider)
       ], child: MainApp()));
     });
   });

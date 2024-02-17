@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rover_app/panel_screens/screens/demo_module.dart';
 import 'package:rover_app/panel_screens/screens/main_panel.dart';
+import 'package:rover_app/panel_screens/screens/matrix_module.dart';
+import 'package:rover_app/panel_screens/screens/ultrasonic_module.dart';
 import 'package:rover_app/providers/bt_controller.dart';
 
 import 'dart:developer' as dev;
@@ -12,7 +14,9 @@ class Panels extends ChangeNotifier {
 
   final Map<int, StatelessWidget> moduleById = {
     16: const MainPanel(),
-    1: const DemoModulePanel()
+    1: const UltrasonicModulePanel(),
+    2: const MatrixModulePanel(),
+    7: const DemoModulePanel()
   };
 
   int currentPageIndex = 0;
@@ -36,8 +40,6 @@ class Panels extends ChangeNotifier {
       listOfPanels.add(moduleById[connectedModules[i]]!);
       listOfTabButtons.add(Tab(text: i.toString(), icon: Icon(Icons.clear)));
     }
-
-    dev.log('$listOfPanels');
     notifyListeners();
   }
 
