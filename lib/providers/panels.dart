@@ -25,7 +25,6 @@ class Panels extends ChangeNotifier {
 
   List<Tab> listOfTabButtons = [Tab(text: 'Home', icon: Icon(Icons.home))];
 
-
   /// Osvježi listu panela i UI
   void updateLists(List<int> message) {
     List<int> connectedModules = List.from(message.getRange(2, 2 + message[1]));
@@ -41,6 +40,10 @@ class Panels extends ChangeNotifier {
       listOfTabButtons.add(Tab(text: i.toString(), icon: Icon(Icons.clear)));
     }
     notifyListeners();
+  }
+
+  List<Widget> getPanels() {
+    return listOfPanels;
   }
 
   /// Promjeni modul i pošalji signal za promjenu modula

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rover_app/providers/panels.dart';
 
 /// Središnji dio ekrana
-/// 
+///
 /// Sadrži [TabBarView] kojim se kontrolira biranje modula
 class Panel extends StatelessWidget {
   const Panel({super.key});
@@ -23,7 +23,8 @@ class Panel extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               labelColor: Colors.blueGrey,
             ),
-            body: TabBarView(children: panelsProvider.listOfPanels),
+            body: TabBarView(
+                key: UniqueKey(), children: panelsProvider.getPanels()),
           ),
         );
       },
