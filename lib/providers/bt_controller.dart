@@ -170,39 +170,32 @@ class BtController extends ChangeNotifier {
   /// Na osnovu prvog polja biti će drugačija reakcija
   /// Reakcija se dodaje samo modulima koji imaju povratnu poruku roveru
   void messageReaction(List<int> message) {
-    dev.log('$message');
     switch (message[0]) {
       case 1:
         /// Ultrasonic modul
-        ultrasonicModuleProvider.getDistance(inputBuffer);
+        ultrasonicModuleProvider.getDistance(message);
         break;
       case 2:
         /// Matrix modul
         /// Nema povratnu informaciju
         break;
       case 3:
-
         /// ID je neiskorišten
         break;
       case 4:
-
         /// ID je neiskorišten
         break;
       case 5:
-
         /// ID je neiskorišten
         break;
       case 6:
-
         /// ID je neiskorišten
         break;
       case 7:
-
         /// Demo modul
         /// Nema povratnu informaciju
         break;
       case 17:
-
         /// Ponovno skeniranje
         _panelsProvider.updateLists(message);
         break;
@@ -210,7 +203,6 @@ class BtController extends ChangeNotifier {
         dev.log('no case');
         break;
     }
-
     notifyListeners();
   }
 
@@ -232,9 +224,6 @@ class BtController extends ChangeNotifier {
       message = Uint8List.fromList(
           [254, 19, motorControl, mode] + List.filled(61, 0));
     }
-
-    dev.log('---> $message');
-
     try {
       connection!.output.add(message);
       await connection!.output.allSent;

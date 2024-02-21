@@ -20,9 +20,7 @@ class UltrasonicModuleProvider extends ChangeNotifier {
   /// Pretvara poruku u `double`
   void getDistance(List<int> inputBuffer) {
     distance = inputBuffer[1];
-
-    dev.log('got distance');
-
+    dev.log('New distance: $distance');
     notifyListeners();
   }
 
@@ -34,11 +32,9 @@ class UltrasonicModuleProvider extends ChangeNotifier {
           List<int> message = [1];
           bt.changeDataForModule(message);
           bt.sendMessage();
-          startUltrasonicService(bt); // Recursive call
         }
-        selected = false;
-        notifyListeners();
       });
     }
+    selected = false;
   }
 }

@@ -45,8 +45,7 @@ class DeviceListScreen extends StatelessWidget {
                   return L10n.all
                       .map((e) => Container(
                           alignment: Alignment.center,
-                          child: Text(getLanguageName(e),
-                              style: const TextStyle(color: Colors.white))))
+                          child: Text(getLanguageName(e))))
                       .toList();
                 },
                 value: lang,
@@ -158,13 +157,13 @@ class DeviceListScreen extends StatelessWidget {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                                title: const Text('No bluetooth or location'),
-                                content: const Text(
-                                    'Turn on bluetooth and location and restart app'),
+                                title: Text(AppLocalizations.of(context)!.bluetooth_error_label),
+                                content: Text(
+                                    AppLocalizations.of(context)!.bluetooth_error),
                                 actions: [
                                   TextButton(
                                       onPressed: () => exit(0),
-                                      child: Text('OK'))
+                                      child: Text(AppLocalizations.of(context)!.ok))
                                 ],
                               ));
                     }

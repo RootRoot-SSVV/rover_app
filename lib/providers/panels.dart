@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rover_app/panel_screens/screens/demo_module.dart';
@@ -5,8 +7,6 @@ import 'package:rover_app/panel_screens/screens/main_panel.dart';
 import 'package:rover_app/panel_screens/screens/matrix_module.dart';
 import 'package:rover_app/panel_screens/screens/ultrasonic_module.dart';
 import 'package:rover_app/providers/bt_controller.dart';
-
-import 'dart:developer' as dev;
 
 /// Provider za kontroliranje panela (ekrana modula)
 class Panels extends ChangeNotifier {

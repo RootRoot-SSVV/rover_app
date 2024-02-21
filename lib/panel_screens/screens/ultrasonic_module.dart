@@ -17,12 +17,14 @@ class UltrasonicModulePanel extends StatelessWidget {
         .selected) {
       Provider.of<UltrasonicModuleProvider>(context, listen: false).selected =
           true;
-      Provider.of<UltrasonicModuleProvider>(context)
+      Provider.of<UltrasonicModuleProvider>(context, listen: false)
           .startUltrasonicService(Provider.of<BtController>(context));
     }
 
-    return Center(
-        child: Text(
-            '${Provider.of<UltrasonicModuleProvider>(context).distance} cm'));
+    return Consumer<UltrasonicModuleProvider>(
+      builder: (context, provider, child) {
+        return Center(child: Text('${provider.distance} cm'));
+      },
+    );
   }
 }

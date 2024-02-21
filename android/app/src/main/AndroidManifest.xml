@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <application
-        android:label="rover_app"
+        android:label="ROVER"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
