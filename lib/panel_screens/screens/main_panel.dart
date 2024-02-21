@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rover_app/providers/bt_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

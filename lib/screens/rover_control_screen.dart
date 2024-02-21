@@ -32,7 +32,7 @@ class RoverControlScreen extends StatelessWidget {
               )),
 
           /// Ekran u sredini
-          Expanded(flex: 6, child: Panel()),
+          const Expanded(flex: 6, child: Panel()),
 
           /// Gumbi s desne strane
           Expanded(

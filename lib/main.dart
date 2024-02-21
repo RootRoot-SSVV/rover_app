@@ -53,17 +53,17 @@ void main() {
         ChangeNotifierProvider(create: (_) => demoModuleProvider),
         ChangeNotifierProvider(create: (_) => ultrasonicModuleProvider),
         ChangeNotifierProvider(create: (_) => matrixModuleProvider)
-      ], child: MainApp()));
+      ], child: const MainApp()));
     });
   });
 }
 
 /// Svi ekrani
 final GoRouter _router = GoRouter(routes: <RouteBase>[
-  GoRoute(path: '/', builder: (context, state) => DeviceListScreen()),
+  GoRoute(path: '/', builder: (context, state) => const DeviceListScreen()),
   GoRoute(
     path: '/controlScreen',
-    builder: (context, state) => RoverControlScreen(),
+    builder: (context, state) => const RoverControlScreen(),
   ),
   GoRoute(
       path: '/privacyPolicy',

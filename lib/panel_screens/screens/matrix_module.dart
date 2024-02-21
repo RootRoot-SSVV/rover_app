@@ -41,7 +41,7 @@ class MatrixModulePanel extends StatelessWidget {
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey),
                           color: provider.gridState[row][col]
-                              ? Color(0xFFd2e4ff)
+                              ? const Color(0xFFd2e4ff)
                               : Colors.transparent)),
                 ),
               );
