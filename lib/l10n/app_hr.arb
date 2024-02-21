@@ -13,8 +13,8 @@
     "bluetooth_error_label": "Bluetooth ili lokacija neaktivirana",
     "bluetooth_error": "Turn on bluetooth and location and restart app",
     "ok": "U redu",
-    "exit_label": "Izlaz?",
-    "exit_text": "Želite li izaći iz aplikacije",
+    "exit_label": "Izlaz",
+    "exit_text": "Želite li izaći iz aplikacije?",
     "exit_yes": "Izađi",
     "exit_no": "Poništi"
 }

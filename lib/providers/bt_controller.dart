@@ -65,8 +65,11 @@ class BtController extends ChangeNotifier {
   BtController(
     this._panelsProvider,
     this.demoModuleProvider,
-    this.ultrasonicModuleProvider, this.matrixModuleProvider,
+    this.ultrasonicModuleProvider,
+    this.matrixModuleProvider,
   ) {
+    services();
+
     FlutterBluetoothSerial.instance.state
         .then((state) => _bluetoothState = state);
 
@@ -88,11 +91,19 @@ class BtController extends ChangeNotifier {
     });
   }
 
+  void services() {
+    ultrasonicModuleProvider.startUltrasonicService(this);
+  }
+
   /// Kreni prikupljanje podataka.
   /// Kada se prikupi dovoljno podataka izvrši akciju (60 bitova).
   /// Nakon obrade izbriši podatke iz [inputBuffer].
-  BtController.fromCollection(this.connection, this._panelsProvider,
-      this.demoModuleProvider, this.ultrasonicModuleProvider, this.matrixModuleProvider) {
+  BtController.fromCollection(
+      this.connection,
+      this._panelsProvider,
+      this.demoModuleProvider,
+      this.ultrasonicModuleProvider,
+      this.matrixModuleProvider) {
     connection?.input!.listen((data) {
       inputBuffer += data;
 
@@ -172,30 +183,38 @@ class BtController extends ChangeNotifier {
   void messageReaction(List<int> message) {
     switch (message[0]) {
       case 1:
+
         /// Ultrasonic modul
         ultrasonicModuleProvider.getDistance(message);
         break;
       case 2:
+
         /// Matrix modul
         /// Nema povratnu informaciju
         break;
       case 3:
+
         /// ID je neiskorišten
         break;
       case 4:
+
         /// ID je neiskorišten
         break;
       case 5:
+
         /// ID je neiskorišten
         break;
       case 6:
+
         /// ID je neiskorišten
         break;
       case 7:
+
         /// Demo modul
         /// Nema povratnu informaciju
         break;
       case 17:
+
         /// Ponovno skeniranje
         _panelsProvider.updateLists(message);
         break;

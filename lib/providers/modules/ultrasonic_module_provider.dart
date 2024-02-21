@@ -12,29 +12,28 @@ import 'dart:developer' as dev;
 /// Šalje u formatu
 ///   [trig]
 /// Prima u formatu
-///   ???
+///   [prvi broj][drugi broj]
+///   udaljenost = prvi broj + drugi broj
 class UltrasonicModuleProvider extends ChangeNotifier {
   int distance = 0;
-  bool selected = false;
 
-  /// Pretvara poruku u `double`
   void getDistance(List<int> inputBuffer) {
-    distance = inputBuffer[1];
-    dev.log('New distance: $distance');
+    distance = inputBuffer[1] + inputBuffer[2];
     notifyListeners();
   }
 
   void startUltrasonicService(BtController bt) async {
-    if (selected) {
-      await Future.delayed(const Duration(seconds: 2), () {
-        if (selected) {
-          dev.log('sending, ultrasonic');
-          List<int> message = [1];
-          bt.changeDataForModule(message);
+    while (true) {
+      await Future.delayed(const Duration(milliseconds: 1500), () {
+        dev.log('us');
+        List<int> message = [1];
+        bt.changeDataForModule(message);
+        if (bt.mode == 1) {
+
+          dev.log('us sent');
           bt.sendMessage();
         }
       });
     }
-    selected = false;
   }
 }

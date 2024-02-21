@@ -27,9 +27,9 @@ class _ControlButtonState extends State<ControlButton> {
           borderRadius: BorderRadius.circular(35.0),
           child: Material(
             color:
-                pressedDown ? const Color(0xFF001c3a) : const Color(0xFF1e5fa6),
+                pressedDown ? Theme.of(context).colorScheme.secondaryContainer : Theme.of(context).colorScheme.primaryContainer,
             child: InkWell(
-                child: Icon(widget.icon, color: const Color(0xFFd2e4ff))),
+                child: Icon(widget.icon, color: Theme.of(context).colorScheme.onPrimaryContainer)),
           ),
         ),
       ),

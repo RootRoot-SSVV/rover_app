@@ -13,8 +13,8 @@
     "bluetooth_error_label": "No bluetooth or location",
     "bluetooth_error": "Turn on bluetooth and location and restart app",
     "ok": "ok",
-    "exit_label": "Exit?",
-    "exit_text": "Do you want to exit app",
+    "exit_label": "Exit",
+    "exit_text": "Do you want to exit app?",
     "exit_yes": "Exit",
     "exit_no": "Cancel"
 
