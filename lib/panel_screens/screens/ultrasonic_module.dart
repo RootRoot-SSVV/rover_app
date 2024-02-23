@@ -15,7 +15,7 @@ class UltrasonicModulePanel extends StatelessWidget {
 
     return Consumer<UltrasonicModuleProvider>(
       builder: (context, provider, child) {
-        return Center(child: Text('${provider.distance} cm'));
+        return Center(child: Text('${provider.distance} cm', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),));
       },
     );
   }

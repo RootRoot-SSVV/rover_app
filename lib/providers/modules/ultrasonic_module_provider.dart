@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:rover_app/providers/bt_controller.dart';
 
@@ -22,14 +20,13 @@ class UltrasonicModuleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Pokreće funkciju koje je aktivna u pozadini cijelo vrijeme
+  /// Svake pola sekunde pošalji ping za osvježavanje udaljenosti ako je 
+  /// odabran taj modul
   void startUltrasonicService(BtController bt) async {
     while (true) {
-      await Future.delayed(const Duration(milliseconds: 1500), () {
-        dev.log('us');
-        List<int> message = [1];
-        bt.changeDataForModule(message);
+      await Future.delayed(const Duration(milliseconds: 500), () {
         if (bt.mode == 1) {
-
           dev.log('us sent');
           bt.sendMessage();
         }

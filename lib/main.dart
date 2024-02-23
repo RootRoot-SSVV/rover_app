@@ -18,11 +18,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rover_app/themes/blue.dart';
 
 void main() {
+  /// Provjeri i postavi aplikaciju horizontalno
   WidgetsFlutterBinding.ensureInitialized();
-
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-  /// Provideri za module
+  /// Provideri za module (dodajte ako mislite napraviti modul)
 
   DemoModuleProvider demoModuleProvider = DemoModuleProvider();
   UltrasonicModuleProvider ultrasonicModuleProvider =

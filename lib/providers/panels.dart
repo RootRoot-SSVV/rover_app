@@ -23,7 +23,7 @@ class Panels extends ChangeNotifier {
 
   List<Widget> listOfPanels = [MainPanel()];
 
-  List<Tab> listOfTabButtons = [Tab(text: 'Home', icon: Icon(Icons.home))];
+  List<Tab> listOfTabButtons = [Tab(text: 'Start', icon: Icon(Icons.home))];
 
   /// Osvježi listu panela i UI
   void updateLists(List<int> message) {
@@ -33,11 +33,11 @@ class Panels extends ChangeNotifier {
     listOfTabButtons.clear();
 
     listOfPanels.add(moduleById[16]!);
-    listOfTabButtons.add(const Tab(text: 'Home', icon: Icon(Icons.home)));
+    listOfTabButtons.add(const Tab(text: 'Start', icon: Icon(Icons.home)));
 
     for (int i = 0; i < connectedModules.length; i++) {
       listOfPanels.add(moduleById[connectedModules[i]]!);
-      listOfTabButtons.add(Tab(text: i.toString(), icon: Icon(Icons.clear)));
+      listOfTabButtons.add(Tab(text: connectedModules[i].toString(), icon: Icon(getCustomIcon(connectedModules[i]))));
     }
     notifyListeners();
   }
@@ -54,5 +54,12 @@ class Panels extends ChangeNotifier {
       Provider.of<BtController>(context, listen: false)
           .sendMessage(changingModule: true);
     }
+  }
+
+  /// Dohvati određenu ikonu ovisno o modulu
+  IconData getCustomIcon(int id) {
+    if (id == 1) return Icons.straighten;
+    if (id == 2) return Icons.apps;
+    return Icons.view_agenda;
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Plava tema aplikacije
+/// Svijetla tema
 const lightBlueScheme = ColorScheme(
   brightness: Brightness.light,
   primary: Color(0xFF1E5FA6),
@@ -35,6 +35,7 @@ const lightBlueScheme = ColorScheme(
   scrim: Color(0xFF000000),
 );
 
+/// Tamna tema
 const darkBlueScheme = ColorScheme(
   brightness: Brightness.dark,
   primary: Color(0xFFA5C8FF),

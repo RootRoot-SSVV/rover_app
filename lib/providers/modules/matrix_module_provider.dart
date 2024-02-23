@@ -12,6 +12,8 @@ class MatrixModuleProvider extends ChangeNotifier {
   }
 
   /// Funckija slanja poruke u zadanom formatu
+  /// Pretvara 2D listu u 1D listu s brojevima
+  /// Jedan broj -> jedan red, odnosno jedan boolean -> jedan bit
   void sendMessage(BtController bt) {
     List<int> message = [];
 

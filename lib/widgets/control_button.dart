@@ -4,6 +4,8 @@ import 'package:rover_app/providers/bt_controller.dart';
 
 /// Gumb koji detektira pritisak i otpuštanje
 /// Šalje se primjerena poruka ovisno o [value]
+/// 
+/// Odnosno mijenja se jedna varijabla koja se onda šalje za pomjeranje motora
 class ControlButton extends StatefulWidget {
   final IconData icon;
   final int value;

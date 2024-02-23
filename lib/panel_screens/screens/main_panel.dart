@@ -20,6 +20,7 @@ class MainPanel extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          /// Gumb za izlaz
           OutlinedButton.icon(
             onPressed: () => showDialog(
               context: context,
@@ -37,6 +38,7 @@ class MainPanel extends StatelessWidget {
             icon: const Icon(Icons.exit_to_app),
             label: Text(AppLocalizations.of(context)!.exit_button),
           ),
+          /// Gumb za ponovno skeniranje
           Consumer<BtController>(
             builder: (context, btController, child) {
               return OutlinedButton.icon(

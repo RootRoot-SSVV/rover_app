@@ -183,38 +183,30 @@ class BtController extends ChangeNotifier {
   void messageReaction(List<int> message) {
     switch (message[0]) {
       case 1:
-
         /// Ultrasonic modul
         ultrasonicModuleProvider.getDistance(message);
         break;
       case 2:
-
         /// Matrix modul
         /// Nema povratnu informaciju
         break;
       case 3:
-
         /// ID je neiskorišten
         break;
       case 4:
-
         /// ID je neiskorišten
         break;
       case 5:
-
         /// ID je neiskorišten
         break;
       case 6:
-
         /// ID je neiskorišten
         break;
       case 7:
-
         /// Demo modul
         /// Nema povratnu informaciju
         break;
       case 17:
-
         /// Ponovno skeniranje
         _panelsProvider.updateLists(message);
         break;
