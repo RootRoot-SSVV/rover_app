@@ -21,7 +21,7 @@ class DemoModulePanel extends StatelessWidget {
             Row(children: [
               Switch(
                   value: provider.led1,
-
+                  
                   /// Promijeni vrijednost i pošalji poruku.
                   onChanged: (bool value) => provider.led1Change(value,
                       Provider.of<BtController>(context, listen: false))),
@@ -32,6 +32,10 @@ class DemoModulePanel extends StatelessWidget {
               Switch(
                   value: provider.led3,
                   onChanged: (bool value) => provider.led3Change(value,
+                      Provider.of<BtController>(context, listen: false))),
+              Switch(
+                  value: provider.buzzer,
+                  onChanged: (bool value) => provider.changeBuzzer(value,
                       Provider.of<BtController>(context, listen: false))),
             ]),
             Slider(

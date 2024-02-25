@@ -8,7 +8,7 @@ import 'package:rover_app/providers/bt_controller.dart';
 /// Šalje podatke u formatu:
 ///   [led1][led2][led3][red][green][blue][zujalica]
 class DemoModuleProvider extends ChangeNotifier {
-  bool led1 = false, led2 = false, led3 = false;
+  bool led1 = false, led2 = false, led3 = false, buzzer = false;
   double red = 0, green = 0, blue = 0;
 
   /// Iduće tri funkcije mijenjaju vrijednost i šalju poruku
@@ -46,6 +46,12 @@ class DemoModuleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void changeBuzzer(bool value, BtController bt) {
+    buzzer = value;
+    sendMessage(bt);
+    notifyListeners();
+  }
+
   /// Funckija slanja poruke u zadanom formatu
   void sendMessage(BtController bt) {
     List<int> message = [
@@ -54,7 +60,8 @@ class DemoModuleProvider extends ChangeNotifier {
       led3 ? 1 : 0,
       red.floor(),
       green.floor(),
-      blue.floor()
+      blue.floor(),
+      buzzer ? 1 : 0
     ];
     bt.changeDataForModule(message);
     bt.sendMessage();
