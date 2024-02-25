@@ -50,6 +50,8 @@ class BtController extends ChangeNotifier {
   List<int> connectedModules = List<int>.empty(growable: true);
   int mode = 16;
 
+  bool sending = false;
+
   /// Vrijednosti koje služe za spajanje i održavanje povezanosti s roverom
   BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
   bool bluetoothIsOn = true;
@@ -228,6 +230,9 @@ class BtController extends ChangeNotifier {
 
   /// Pošalji poruku roveru
   void sendMessage({bool changingModule = false}) async {
+    if(sending) return;
+
+    sending = true;
     Uint8List message;
     if (!changingModule) {
       message = Uint8List.fromList([254, mode, motorControl] + dataForModule);
@@ -241,6 +246,7 @@ class BtController extends ChangeNotifier {
     } catch (e) {
       dev.log('Catch in: void sendMessage()');
     }
+    sending = false;
   }
 
   /// Šalje signal za skeniranje modula
