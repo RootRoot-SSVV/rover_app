@@ -18,6 +18,7 @@ dependencies:
   permission_handler: ^10.4.3
   provider: ^6.0.5
   url_launcher: ^6.1.14
+  flutter_launcher_icons: "^0.10.0"
 
 dev_dependencies:
   flutter_test:
@@ -31,3 +32,8 @@ flutter:
    - family: my_icons
      fonts:
       - asset: lib/assets/icons/my_icons.ttf
+  
+flutter_icons:
+  android: true
+  image_path: "lib/assets/icon/rover.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
