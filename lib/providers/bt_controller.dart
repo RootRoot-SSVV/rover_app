@@ -230,8 +230,6 @@ class BtController extends ChangeNotifier {
 
   /// Pošalji poruku roveru
   void sendMessage({bool changingModule = false}) async {
-    if(sending) return;
-
     sending = true;
     Uint8List message;
     if (!changingModule) {
@@ -240,6 +238,9 @@ class BtController extends ChangeNotifier {
       message = Uint8List.fromList(
           [254, 19, motorControl, mode] + List.filled(61, 0));
     }
+
+    dev.log('$message');
+
     try {
       connection!.output.add(message);
       await connection!.output.allSent;

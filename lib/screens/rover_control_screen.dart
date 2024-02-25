@@ -25,8 +25,8 @@ class RoverControlScreen extends StatelessWidget {
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                   children: const [
-                    ControlButton(icon: Icons.arrow_upward, value: 1),
-                    ControlButton(icon: Icons.arrow_downward, value: 2)
+                    ControlButton(icon: Icons.arrow_upward, value: 2),
+                    ControlButton(icon: Icons.arrow_downward, value: 1)
                   ],
                 ),
               )),

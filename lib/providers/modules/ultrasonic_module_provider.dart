@@ -25,7 +25,7 @@ class UltrasonicModuleProvider extends ChangeNotifier {
   /// odabran taj modul
   void startUltrasonicService(BtController bt) async {
     while (true) {
-      await Future.delayed(const Duration(milliseconds: 500), () {
+      await Future.delayed(const Duration(milliseconds: 2500), () {
         if (bt.mode == 1) {
           dev.log('us sent');
           bt.sendMessage();
