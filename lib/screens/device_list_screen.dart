@@ -81,7 +81,7 @@ class DeviceListScreen extends StatelessWidget {
                                 title: const Text('GitHub'),
                                 onTap: () async {
                                   Uri url = Uri.parse(
-                                      'https://github.com/RootRoot-SSVV/rover_app');
+                                      'https://github.com/RootRoot-SSVV/rover');
                                   if (!await launchUrl(url)) {
                                     throw Exception('Could not launch $url');
                                   }
@@ -91,7 +91,7 @@ class DeviceListScreen extends StatelessWidget {
                                 leading: const Icon(Icons.article_outlined),
                                 title: Text(AppLocalizations.of(context)!.docs),
                                 onTap: () async {
-                                  Uri url = Uri.parse('https://google.com');
+                                  Uri url = Uri.parse('https://rootroot-ssvv.github.io/rover-dokumentacija/');
                                   if (!await launchUrl(url)) {
                                     throw Exception('Could not launch $url');
                                   }

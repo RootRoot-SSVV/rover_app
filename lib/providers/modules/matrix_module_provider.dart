@@ -22,7 +22,7 @@ class MatrixModuleProvider extends ChangeNotifier {
 
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
-        if (gridState[i][j]) {
+        if (gridState[i][7 - j]) {
           currentInt |= (1 << bitPosition);
         }
         bitPosition++;
