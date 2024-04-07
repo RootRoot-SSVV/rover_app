@@ -37,20 +37,20 @@ class _ControlButtonState extends State<ControlButton> {
       ),
       onTapDown: (details) {
         provider.motorControl |= widget.value;
-        provider.sendMessage();
+        provider.composeMessage();
         setState(() => pressedDown = true);
       },
       onTapUp: (details) {
         if (pressedDown) {
           provider.motorControl = 0;
-          provider.sendMessage();
+          provider.composeMessage();
         }
         setState(() => pressedDown = false);
       },
       onVerticalDragEnd: (details) {
         if (pressedDown) {
           provider.motorControl = 0;
-          provider.sendMessage();
+          provider.composeMessage();
         }
         setState(() => pressedDown = false);
       },

@@ -64,6 +64,6 @@ class DemoModuleProvider extends ChangeNotifier {
       buzzer ? 1 : 0
     ];
     bt.changeDataForModule(message);
-    bt.sendMessage();
+    bt.composeMessage();
   }
 }

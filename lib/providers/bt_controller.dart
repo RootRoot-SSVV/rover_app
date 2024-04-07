@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -46,11 +47,11 @@ class BtController extends ChangeNotifier {
   /// Podaci koji se šalju i primaju putem Bluetooth-a
   List<int> inputBuffer = List<int>.empty(growable: true);
   int motorControl = 0;
-  List<int> dataForModule = List.filled(62, 0);
+  List<int> dataForModule = List.filled(14, 0);
   List<int> connectedModules = List<int>.empty(growable: true);
   int mode = 16;
 
-  bool sending = false;
+  Queue<Uint8List> messageQueue = Queue<Uint8List>();
 
   /// Vrijednosti koje služe za spajanje i održavanje povezanosti s roverom
   BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
@@ -60,7 +61,7 @@ class BtController extends ChangeNotifier {
       List<BluetoothDiscoveryResult>.empty(growable: true);
   bool isDiscovering = false;
   Timer? _discoverableTimeoutTimer;
-  BluetoothConnection? connection;
+  BluetoothConnection? connection = null;
 
   /// Konstruktor za [BtController] zahtjeva Provider za panele i module.
   /// Pri svakom stvaranju modula dodati argument
@@ -93,7 +94,8 @@ class BtController extends ChangeNotifier {
     });
   }
 
-  void services() {
+  void services() async {
+    sendMessageQueueService();
     ultrasonicModuleProvider.startUltrasonicService(this);
   }
 
@@ -111,11 +113,11 @@ class BtController extends ChangeNotifier {
 
       while (true) {
         int index = inputBuffer.indexOf(254);
-        if (index >= 0 && inputBuffer.length - index >= 60) {
+        if (index >= 0 && inputBuffer.length - index >= 16) {
           List<int> dataReceivedList =
-              List.from(inputBuffer.getRange(index + 1, index + 60));
+              List.from(inputBuffer.getRange(index + 1, index + 16));
           messageReaction(dataReceivedList);
-          inputBuffer.removeRange(0, index + 60);
+          inputBuffer.removeRange(0, index + 16);
         } else {
           break;
         }
@@ -228,26 +230,58 @@ class BtController extends ChangeNotifier {
     }
   }
 
-  /// Pošalji poruku roveru
-  void sendMessage({bool changingModule = false}) async {
-    sending = true;
+  /// Uvijet za pokretanje servisa slanja poruka
+  Future<bool> checkCondition() async {
+    await Future.delayed(const Duration(seconds: 1));
+    return connection != null;
+  }
+
+  /// Servis za slanje poruka
+  /// 
+  /// Ako se se nakupi više od 1 poruke u queue-u pošalji svaku poruku 
+  /// nakon 35 milisekundi
+  void sendMessageQueueService() async {
+    bool condition = false;
+
+    while(!condition) {
+      condition = await checkCondition();
+    }
+    while(true) {
+      await Future.delayed(const Duration(milliseconds: 5));
+      if(messageQueue.isNotEmpty) {
+        if(messageQueue.length == 1) {
+          try {
+            connection!.output.add(messageQueue.first);
+            await connection!.output.allSent;
+          } catch (e) {
+            dev.log('Catch in: void sendMessage()');
+          }
+        } else {
+          try {
+            connection!.output.add(messageQueue.first);
+            await connection!.output.allSent;
+          } catch (e) {
+            dev.log('Catch in: void sendMessage()');
+          }
+          await Future.delayed(const Duration(milliseconds: 35));
+        }
+
+        messageQueue.removeFirst();
+      }
+    }
+  }
+
+  /// Stvori poruku roveru
+  void composeMessage({bool changingModule = false}) async {
     Uint8List message;
     if (!changingModule) {
       message = Uint8List.fromList([254, mode, motorControl] + dataForModule);
     } else {
       message = Uint8List.fromList(
-          [254, 19, motorControl, mode] + List.filled(61, 0));
+          [254, 19, motorControl, mode] + List.filled(13, 0));
     }
 
-    dev.log('$message');
-
-    try {
-      connection!.output.add(message);
-      await connection!.output.allSent;
-    } catch (e) {
-      dev.log('Catch in: void sendMessage()');
-    }
-    sending = false;
+    messageQueue.addLast(message);
   }
 
   /// Šalje signal za skeniranje modula
@@ -255,7 +289,7 @@ class BtController extends ChangeNotifier {
   /// Mijenja mod na skeniranje (18), šalje poruku i vraća na neutralno (16)
   void scanForModules() async {
     mode = 18;
-    sendMessage();
+    composeMessage();
     mode = 16;
     notifyListeners();
   }

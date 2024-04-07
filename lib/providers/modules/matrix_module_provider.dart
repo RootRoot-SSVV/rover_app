@@ -39,6 +39,6 @@ class MatrixModuleProvider extends ChangeNotifier {
     }
 
     bt.changeDataForModule(message);
-    bt.sendMessage();
+    bt.composeMessage();
   }
 }

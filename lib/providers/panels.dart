@@ -52,7 +52,11 @@ class Panels extends ChangeNotifier {
     if (provider.mode != mode) {
       Provider.of<BtController>(context, listen: false).mode = mode;
       Provider.of<BtController>(context, listen: false)
-          .sendMessage(changingModule: true);
+          .composeMessage(changingModule: true);
+    }
+
+    if(mode == 1) {
+      Provider.of<BtController>(context, listen: false).changeDataForModule([0]);
     }
   }
 
